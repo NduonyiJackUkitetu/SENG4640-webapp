@@ -1,3 +1,4 @@
+/* Center the login container */
 body {
     display: flex;
     justify-content: center;
@@ -8,6 +9,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Login container styling */
 .login-container {
     background: white;
     padding: 20px;
@@ -17,10 +19,12 @@ body {
     text-align: center;
 }
 
+/* Adjust heading spacing */
 .login-container h2 {
     margin-bottom: 15%;
 }
 
+/* Input field styling */
 .input-group {
     margin-bottom: 15px;
 }
@@ -32,20 +36,8 @@ body {
     border-radius: 5px;
 }
 
-.login-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px;
-    width: 90%;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.login-btn:hover {
-    background-color: #0056b3;
-}
-
+/* Button styling */
+.login-btn,
 .create-account-btn {
     background-color: #007bff;
     color: white;
@@ -57,10 +49,13 @@ body {
     margin-top: 10px;
 }
 
+/* Button hover effect */
+.login-btn:hover,
 .create-account-btn:hover {
     background-color: #0056b3;
 }
 
+/* Spacing between buttons */
 .button-group button {
     margin-top: 10px;
 }
