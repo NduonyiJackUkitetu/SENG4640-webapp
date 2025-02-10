@@ -50,6 +50,17 @@ body {
     flex-grow: 1;
     /* Allows content to expand within the container */
 }
+.product .product-select{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex: 1 1 48%;
+}
+.product .product-select .button-container {
+    display: flex;
+    gap: 10px; /* Adds spacing between buttons */
+    justify-content: space-between; /* Distributes buttons evenly */
+}
 
 /* Styles product images to be uniform in size and shape */
 .product img {
@@ -84,15 +95,32 @@ body {
     margin-bottom: 10px;
 }
 
+button {
+    background-color: #007bff !important;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: auto;
+    flex: 1; /* Makes buttons share available space */
+    max-width: 48%; /* Ensures they stay within their column */
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3!important;
+}
+
 /* Responsive Design: Adjusts product width for medium screens */
-@media (max-width: 900px) {
+@media (max-width: 1400px) {
     .product {
         width: 45%;
     }
 }
 
 /* Responsive Design: Adjusts product width for small screens */
-@media (max-width: 600px) {
+@media (max-width: 100px) {
     .product {
         width: 90%;
     }
