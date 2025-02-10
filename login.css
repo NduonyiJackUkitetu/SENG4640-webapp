@@ -5,7 +5,6 @@ body {
     align-items: center;
     height: 100vh;
     background-image: url(images/image-login-background.jpg);
-    background-size: cover;
     font-family: Arial, sans-serif;
 }
 

@@ -7,8 +7,7 @@ body {
 
 /* Styles the header section with a background image and centered text */
 .header {
-    background-image: url(image-login-background.jpg);
-    background-size: cover;
+    background-image: url(images/image-login-background.jpg);
     background-position: center;
     height: 250px;
     display: flex;

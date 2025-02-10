@@ -4,8 +4,7 @@ body {
     padding: 0;
     background-color: #f8f9fa;
     text-align: center;
-    background-image: url(image-login-background.jpg);
-    background-size: cover;
+    background-image: url(images/image-login-background.jpg);
     background-position: center;
 }
 

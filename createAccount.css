@@ -10,8 +10,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(image-login-background.jpg);
-    background-size: cover;
+    background-image: url(images/image-login-background.jpg);
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     overflow: auto;
