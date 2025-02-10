@@ -64,8 +64,10 @@ label {
     font-weight: bold;
 }
 
+
 input[type="text"],
 input[type="email"],
+input[type="password"],
 input[type="number"] {
     width: 100%;
     padding: 8px;
@@ -73,6 +75,7 @@ input[type="number"] {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
 
 button {
     background-color: #007bff;
