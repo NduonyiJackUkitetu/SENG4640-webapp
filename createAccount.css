@@ -16,8 +16,9 @@ body {
     background-color: #f4f4f4;
     overflow: auto;
 }
-  
-  .checkout-container {
+
+
+.createaccount-container {
     background-color: #fff;
     width: 90%;
     /* Responsive width */
@@ -28,81 +29,52 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
-  }
-  
-  h1 {
+}
+
+h1 {
     text-align: center;
     margin-bottom: 20px;
-  }
-  
-  /* Product Summary Styling */
-  .product-summary {
-    display: flex;
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    align-items: center;
-  }
-  
-  .product-summary img {
-    width: 150px;
-    height: auto;
-    margin-right: 15px;
-    border-radius: 4px;
-    object-fit: cover;
-  }
-  
-  .product-info {
-    flex: 1;
-  }
-  
-  .product-info h2 {
-    margin: 0 0 10px 0;
-  }
-  
-  .product-info p {
-    margin: 5px 0;
-  }
-  
-  /* Form Styling */
-  form {
+}
+
+
+/* Form Styling */
+form {
     margin-top: 10px;
-  }
-  
-  fieldset {
+}
+
+fieldset {
     border: 1px solid #ddd;
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 4px;
-  }
-  
-  legend {
+}
+
+legend {
     padding: 0 10px;
     font-weight: bold;
-  }
-  
-  .form-group {
+}
+
+.form-group {
     margin-bottom: 15px;
-  }
-  
-  label {
+}
+
+label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="number"] {
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
-  
-  button {
+}
+
+button {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -111,13 +83,14 @@ body {
     width: 100%;
     border-radius: 4px;
     cursor: pointer;
-  }
-  
-  button:hover {
+}
+
+button:hover {
     background-color: #0056b3;
-  }
-  
-  @media (max-height: 2000px) {
+}
+
+
+@media (max-height: 1000px) {
     body {
         align-items: flex-start;
         /* Moves form higher up if screen is too short */
