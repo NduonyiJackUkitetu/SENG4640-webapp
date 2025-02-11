@@ -128,7 +128,7 @@ body {
 
 .checkout-item {
     display: flex;
-    align-items: center;
+    align-items: right;
     border-bottom: 1px solid #ddd;
     padding: 15px 0;
 }
@@ -151,6 +151,7 @@ body {
 .checkout-item-title {
     font-size: 18px;
     font-weight: bold;
+    text-align: right;
 }
 
 .checkout-item-description,
@@ -158,6 +159,7 @@ body {
 .checkout-item-subtotal {
     font-size: 14px;
     margin: 5px 0;
+    text-align: right;
 }
 
 .checkout-total {
