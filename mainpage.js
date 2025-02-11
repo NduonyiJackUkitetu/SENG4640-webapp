@@ -54,7 +54,6 @@ function addToCart(event) {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert(`${productName} added to cart!`);
 }
 
 // "Buy Now" Functionality (Redirects to Checkout)
@@ -74,7 +73,6 @@ function buyNow(event) {
 
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    alert(`Proceeding to checkout with ${productName}.`);
     window.location.href = "checkout.html"; // Redirect to checkout page
 }
 

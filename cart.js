@@ -68,10 +68,8 @@ function removeItem(index) {
 // Checkout (Redirects to checkout page)
 document.getElementById("checkoutButton").addEventListener("click", () => {
     if (JSON.parse(localStorage.getItem("cart"))?.length === 0) {
-        alert("Your cart is empty. Add items before proceeding to checkout.");
         return;
     }
 
-    alert("Proceeding to checkout!");
     window.location.href = "checkout.html"; // Redirect to checkout page
 });

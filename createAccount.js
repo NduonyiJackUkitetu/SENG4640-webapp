@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         localStorage.setItem(fullName, JSON.stringify(userData));
 
-        alert("Account created successfully! Redirecting to login page...");
         window.location.href = "login.html"; // Redirect to login page
     });
 });

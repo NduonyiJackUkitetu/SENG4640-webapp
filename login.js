@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const storedUser = JSON.parse(localStorage.getItem(fullName));
 
         if (storedUser && storedUser.password === password) {
-            alert("Login successful! Redirecting...");
             window.location.href = "mainpage.html"; // Redirect to main page
         } else {
             alert("Invalid full name or password.");

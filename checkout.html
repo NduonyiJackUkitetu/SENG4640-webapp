@@ -15,18 +15,12 @@
     <h1>Checkout</h1>
 
     <!-- Product Summary Section -->
-    <div class="product-summary">
-      <img src="image-GPU-AMD.jpg" alt="Product Image">
-      <div class="product-info">
-        <h2>Product Name</h2>
-        <p class="product-description">
-          This is a brief description of the product. It highlights key features and benefits to help you decide.
-        </p>
-        <p class="product-price">Price: $50.00</p>
-        <p class="estimated-delivery">Estimated Delivery: 3-5 business days</p>
-        <p class="total-amount">Total (incl. tax): $55.00</p>
-      </div>
-    </div>
+    <!-- Dynamic Cart Items Section -->
+<div id="checkout-cart-items" class="checkout-cart-container"></div>
+
+<!-- Total Price Display -->
+<p id="checkout-total" class="checkout-total"></p>
+
 
     <!-- Checkout Form -->
     <form id="checkoutForm">
@@ -77,7 +71,7 @@
       </fieldset>
 
       <button type="submit" class="checkout-button">Place Order</button>
-      <button type="submit" class="return-to-shopping">Return To Shopping</button>
+      <button type="submit" class="return-toshopping">Return To Shopping</button>
     </form>
   </div>
 
