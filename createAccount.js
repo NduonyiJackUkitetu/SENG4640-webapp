@@ -24,8 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Validate ZIP code (Only numbers, min length 5)
-        if (!/^\d{5,}$/.test(zip)) {
-            alert("Please enter a valid ZIP code (at least 5 digits).");
+        const zipRegex = /(^\d{5}$)|(^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$)/;
+        if (!zipRegex.test(zip)) {
+            alert("Please enter a valid ZIP/Postal Code (5-digit ZIP or A1B2C3 format).");
             return;
         }
 
