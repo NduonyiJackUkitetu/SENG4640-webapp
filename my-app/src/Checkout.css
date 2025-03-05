@@ -1,0 +1,175 @@
+/* Basic Reset and Styling */
+
+.checkout-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(https://i.imgur.com/s6mtWYY.jpeg);
+    font-family: Arial, sans-serif;
+    background-size: cover;
+    background-color: #f4f4f4;
+    overflow: auto;
+}
+
+.checkout-container {
+    background-color: #fff;
+    width: 90%;
+    /* Responsive width */
+    max-width: 600px;
+    /* Set a reasonable max width */
+    margin: 0 auto;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Product Summary Styling */
+.product-summary {
+    display: flex;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    align-items: center;
+}
+
+.product-summary img {
+    width: 150px;
+    height: auto;
+    margin-right: 15px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-info h2 {
+    margin: 0 0 10px 0;
+}
+
+.product-info p {
+    margin: 5px 0;
+}
+
+/* Form Styling */
+form {
+    margin-top: 10px;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+legend {
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+.checkout-cart-container {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.checkout-item {
+    display: flex;
+    align-items: right;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+}
+
+.checkout-item:last-child {
+    border-bottom: none;
+}
+
+.checkout-item-image {
+    width: 100px;
+    height: auto;
+    margin-right: 15px;
+    border-radius: 4px;
+}
+
+.checkout-item-details {
+    flex: 1;
+}
+
+.checkout-item-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.checkout-item-description,
+.checkout-item-price,
+.checkout-item-subtotal {
+    font-size: 14px;
+    margin: 5px 0;
+    text-align: right;
+}
+
+.checkout-total {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 10px;
+}
+
+
+@media (max-height: 2000px) {
+    body {
+        align-items: flex-start;
+        /* Moves form higher up if screen is too short */
+        padding-top: 0px;
+        /* Adds breathing room */
+    }
+}
