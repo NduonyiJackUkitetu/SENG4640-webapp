@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<script src="createAccount.js"></script>
-
-
 <head>
     <meta charset="UTF-8">
     <title>Create Account Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="createAccount.css">
 </head>
-
 <body>
+
     <div class="createaccount-container">
         <h1>Create Account</h1>
-        <!-- Checkout Form -->
-        <form id="createAccountForm"> <!-- Fixed ID -->
+        <form id="createAccountForm">
             <fieldset>
                 <legend>Account Details</legend>
                 <div class="form-group">
@@ -43,16 +38,23 @@
                     <input type="password" id="password" name="password" required>
                 </div>
                 <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label> <!-- Fixed ID -->
+                    <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" name="confirmPassword" required>
                 </div>
+                <div class="form-group">
+                    <label for="role">Account Type</label>
+                    <select id="role" required>
+                        <option value="user">User</option>
+                        <option value="owner">Owner</option>
+                    </select>
+                </div>
             </fieldset>
-        
+
             <button type="submit">Create Account</button>
         </form>
-        
     </div>
 
-</body>
+    <script src="createAccount.js"></script>
 
+</body>
 </html>

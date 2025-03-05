@@ -1,36 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Get form elements
-    const loginForm = document.querySelector("form");
-    const usernameInput = document.querySelector("input[type='text']");
-    const passwordInput = document.querySelector("input[type='password']");
-    const loginButton = document.querySelector(".login-btn");
-    const createAccountButton = document.querySelector(".create-account-btn");
+    const loginForm = document.getElementById("loginForm");
+    const createAccountButton = document.getElementById("createAccountButton");
 
-    // Handle login
-    loginButton.addEventListener("click", (event) => {
-        event.preventDefault(); // Prevent form submission
+    // Handle Login
+    loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
 
-        const fullName = usernameInput.value.trim(); // Use Full Name as Username
-        const password = passwordInput.value.trim();
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
 
-        if (!fullName || !password) {
-            alert("Please enter your full name and password.");
+        if (!username || !password) {
             return;
         }
 
-        // Retrieve stored user data using Full Name
-        const storedUser = JSON.parse(localStorage.getItem(fullName));
+        // Retrieve stored user data
+        const storedUser = JSON.parse(localStorage.getItem(username));
 
         if (storedUser && storedUser.password === password) {
-            window.location.href = "mainpage.html"; // Redirect to main page
+            localStorage.setItem("activeUser", JSON.stringify(storedUser)); // Save active user
+            window.location.href = "mainpage.html";
         } else {
-            alert("Invalid full name or password.");
+            alert("Invalid username or password.");
         }
     });
 
     // Redirect to Create Account Page
-    createAccountButton.addEventListener("click", (event) => {
-        event.preventDefault(); // Prevent form submission
-        window.location.href = "createAccount.html"; // Redirect to create account page
+    createAccountButton.addEventListener("click", () => {
+        window.location.href = "createAccount.html";
     });
 });

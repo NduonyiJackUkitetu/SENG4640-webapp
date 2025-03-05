@@ -1,68 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadProducts(); // Load saved products
 
-    // Event listener for search functionality
-    document.getElementById("searchInput").addEventListener("input", searchProducts);
+    // Get active user
+    const activeUser = JSON.parse(localStorage.getItem("activeUser"));
 
-    // Event listener for cart button
-    document.getElementById("cartButton").addEventListener("click", showCart);
-
-    // Event listener for Add Product button (redirect to Create Product Page)
-    document.getElementById("addProductButton").addEventListener("click", () => {
-        window.location.href = "createProduct.html";
-    });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
+    // Check user role and show/hide "Add Product" button
     const addProductButton = document.getElementById("addProductButton");
-
-    if (addProductButton) {
+    if (activeUser && activeUser.role === "owner") {
+        addProductButton.style.display = "block"; // Show button for owners
         addProductButton.addEventListener("click", () => {
             window.location.href = "createProduct.html";
         });
-    } 
+    }
+
+    document.getElementById("searchInput").addEventListener("input", searchProducts);
+    document.getElementById("cartButton").addEventListener("click", showCart);
 });
 
-
-
-
-// Load Products from Local Storage
+// Load Products
 function loadProducts() {
     let products = JSON.parse(localStorage.getItem("products")) || [];
     let container = document.querySelector(".container");
-
-    // Clear existing products to prevent duplicates
     container.innerHTML = "";
 
-    // Hardcoded Products (Default Store Items)
     const defaultProducts = [
-        {
-            name: "Product 1",
-            description: "Short description here.",
-            price: "$19.99",
-            image: "images/image-GPU-AMD.jpg"
-        },
-        {
-            name: "Product 2",
-            description: "Short description here.",
-            price: "$19.99",
-            image: "images/image-GPU-nvidia.jpeg"
-        },
-        {
-            name: "Product 3",
-            description: "Short description here.",
-            price: "$39.99",
-            image: "images/image-mouse.jpg"
-        },
-        {
-            name: "Product 4",
-            description: "Short description here.",
-            price: "$39.99",
-            image: "images/image-motherboard.jpg"
-        }
+        { name: "Product 1", description: "Short description here.", price: "$19.99", image: "images/image-GPU-AMD.jpg" },
+        { name: "Product 2", description: "Short description here.", price: "$19.99", image: "images/image-GPU-nvidia.jpeg" },
+        { name: "Product 3", description: "Short description here.", price: "$39.99", image: "images/image-mouse.jpg" },
+        { name: "Product 4", description: "Short description here.", price: "$39.99", image: "images/image-motherboard.jpg" }
     ];
 
-    // Merge Default and Saved Products
     let allProducts = [...defaultProducts, ...products];
 
     allProducts.forEach(product => {
@@ -84,7 +51,6 @@ function loadProducts() {
 
         container.appendChild(productElement);
 
-        // Attach event listeners to new buttons
         productElement.querySelector(".add-to-cart").addEventListener("click", () => addToCart(product));
         productElement.querySelector(".buy-now").addEventListener("click", () => buyNow(product));
     });
@@ -102,14 +68,12 @@ function addToCart(product) {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert(`${product.name} added to cart!`);
 }
 
 // "Buy Now" Functionality (Redirects to Checkout)
 function buyNow(product) {
     let cart = [{ ...product, quantity: 1 }];
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert(`Proceeding to checkout with ${product.name}.`);
     window.location.href = "checkout.html";
 }
 

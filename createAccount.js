@@ -1,32 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Get form element
     const createAccountForm = document.getElementById("createAccountForm");
 
-    // Handle form submission
     createAccountForm.addEventListener("submit", (event) => {
-        event.preventDefault(); // Prevent page refresh
+        event.preventDefault();
 
-        // Get form values
         const fullName = document.getElementById("fullName").value.trim();
         const address = document.getElementById("address").value.trim();
         const city = document.getElementById("city").value.trim();
         const state = document.getElementById("state").value.trim();
         const zip = document.getElementById("zip").value.trim();
         const password = document.getElementById("password").value.trim();
-        const confirmPassword = document.getElementById("confirmPassword").value.trim(); // Fixed ID
-
-        console.log("Form Submitted:", { fullName, address, city, state, zip, password, confirmPassword });
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
+        const role = document.getElementById("role").value.trim();
 
         // Validate required fields
-        if (!fullName || !address || !city || !state || !zip || !password || !confirmPassword) {
+        if (!fullName || !address || !city || !state || !zip || !password || !confirmPassword || !role) {
             alert("Please fill in all fields.");
             return;
         }
 
-        // Validate ZIP code (Only numbers, min length 5)
-        const zipRegex = /(^\d{5}$)|(^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$)/;
-        if (!zipRegex.test(zip)) {
-            alert("Please enter a valid ZIP/Postal Code (5-digit ZIP or A1B2C3 format).");
+        // Validate ZIP code (must be at least 5 digits)
+        if (!/^\d{5,}$/.test(zip)) {
+            alert("Please enter a valid ZIP code (at least 5 digits).");
             return;
         }
 
@@ -49,12 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
             city,
             state,
             zip,
-            password
+            password,
+            role
         };
 
         localStorage.setItem(fullName, JSON.stringify(userData));
 
+        alert("Account created successfully! Redirecting to login page...");
         window.location.href = "login.html"; // Redirect to login page
     });
 });
-

@@ -1,35 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<script src="login.js"></script>
-
-
 <head>
-    <meta charset="UTF-8"> <!-- Set character encoding -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensure responsive design -->
-    <title>Login Page</title> <!-- Page title -->
-    <link rel="stylesheet" href="login.css"> <!-- Link external CSS -->
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
 </head>
-
 <body>
-    <!-- Login form container -->
+
     <div class="login-container">
         <h2>Login</h2>
-        <form>
-            <!-- Username input field -->
+        <form id="loginForm">
             <div class="input-group">
-                <input type="text" placeholder="Username" required>
+                <input type="text" id="username" placeholder="Username" required>
             </div>
-            <!-- Password input field -->
             <div class="input-group">
-                <input type="password" placeholder="Password" required>
+                <input type="password" id="password" placeholder="Password" required>
             </div>
-            <!-- Login and Create Account buttons -->
-            <div>
-                <button type="submit" class="login-btn">Login</button>
-                <button type="submit" class="create-account-btn">Create Account</button>
-            </div>
+            <button type="submit">Login</button>
+            <button type="button" id="createAccountButton">Create Account</button>
         </form>
     </div>
-</body>
 
+    <script src="login.js"></script>
+
+</body>
 </html>
