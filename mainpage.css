@@ -173,6 +173,28 @@ button:hover {
     background-color: #0056b3 !important;
 }
 
+
+/* Add Product Button Styling */
+.add-product-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#addProductButton {
+    background-color: #28a745; /* Green color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#addProductButton:hover {
+    background-color: #218838;
+}
+
 /* Responsive Design: Adjusts product width for medium screens */
 @media (max-width: 1400px) {
     .product {

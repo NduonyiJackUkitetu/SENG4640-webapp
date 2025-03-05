@@ -1,79 +1,127 @@
 document.addEventListener("DOMContentLoaded", () => {
+    loadProducts(); // Load saved products
+
     // Event listener for search functionality
     document.getElementById("searchInput").addEventListener("input", searchProducts);
 
-    // Event listeners for "Add to Cart" buttons
-    document.querySelectorAll(".add-to-cart").forEach(button => {
-        button.addEventListener("click", addToCart);
-    });
-
-    // Event listeners for "Buy Now" buttons
-    document.querySelectorAll(".buy-now").forEach(button => {
-        button.addEventListener("click", buyNow);
-    });
-
     // Event listener for cart button
     document.getElementById("cartButton").addEventListener("click", showCart);
+
+    // Event listener for Add Product button (redirect to Create Product Page)
+    document.getElementById("addProductButton").addEventListener("click", () => {
+        window.location.href = "createProduct.html";
+    });
 });
 
-// Search Functionality
+document.addEventListener("DOMContentLoaded", () => {
+    const addProductButton = document.getElementById("addProductButton");
+
+    if (addProductButton) {
+        addProductButton.addEventListener("click", () => {
+            window.location.href = "createProduct.html";
+        });
+    } 
+});
+
+
+
+
+// Load Products from Local Storage
+function loadProducts() {
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    let container = document.querySelector(".container");
+
+    // Clear existing products to prevent duplicates
+    container.innerHTML = "";
+
+    // Hardcoded Products (Default Store Items)
+    const defaultProducts = [
+        {
+            name: "Product 1",
+            description: "Short description here.",
+            price: "$19.99",
+            image: "images/image-GPU-AMD.jpg"
+        },
+        {
+            name: "Product 2",
+            description: "Short description here.",
+            price: "$19.99",
+            image: "images/image-GPU-nvidia.jpeg"
+        },
+        {
+            name: "Product 3",
+            description: "Short description here.",
+            price: "$39.99",
+            image: "images/image-mouse.jpg"
+        },
+        {
+            name: "Product 4",
+            description: "Short description here.",
+            price: "$39.99",
+            image: "images/image-motherboard.jpg"
+        }
+    ];
+
+    // Merge Default and Saved Products
+    let allProducts = [...defaultProducts, ...products];
+
+    allProducts.forEach(product => {
+        let productElement = document.createElement("div");
+        productElement.classList.add("product");
+
+        productElement.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <div class="product-info">
+                <p>${product.description}</p>
+                <div class="price">${product.price}</div>
+                <div class="button-container">
+                    <button class="buy-now">Buy Now</button>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(productElement);
+
+        // Attach event listeners to new buttons
+        productElement.querySelector(".add-to-cart").addEventListener("click", () => addToCart(product));
+        productElement.querySelector(".buy-now").addEventListener("click", () => buyNow(product));
+    });
+}
+
+// Add to Cart Functionality
+function addToCart(product) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let existingProduct = cart.find(item => item.name === product.name);
+
+    if (existingProduct) {
+        existingProduct.quantity += 1;
+    } else {
+        cart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(`${product.name} added to cart!`);
+}
+
+// "Buy Now" Functionality (Redirects to Checkout)
+function buyNow(product) {
+    let cart = [{ ...product, quantity: 1 }];
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(`Proceeding to checkout with ${product.name}.`);
+    window.location.href = "checkout.html";
+}
+
+// Search Products
 function searchProducts() {
     let searchQuery = document.getElementById("searchInput").value.toLowerCase();
     let products = document.querySelectorAll(".product");
 
     products.forEach(product => {
         let title = product.querySelector("h3").textContent.toLowerCase();
-        if (title.includes(searchQuery)) {
-            product.style.display = "block"; // Show matching products
-        } else {
-            product.style.display = "none"; // Hide non-matching products
-        }
+        product.style.display = title.includes(searchQuery) ? "block" : "none";
     });
-}
-
-// Add to Cart Functionality
-function addToCart(event) {
-    let product = event.target.closest(".product");
-    let productName = product.querySelector("h3").textContent;
-    let productPrice = product.querySelector(".price").textContent;
-    let productImage = product.querySelector("img").src;
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    // Check if product is already in the cart
-    let existingProduct = cart.find(item => item.name === productName);
-    if (existingProduct) {
-        existingProduct.quantity += 1; // Increase quantity if already in cart
-    } else {
-        cart.push({
-            name: productName,
-            price: productPrice,
-            image: productImage,
-            quantity: 1
-        });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-// "Buy Now" Functionality (Redirects to Checkout)
-function buyNow(event) {
-    let product = event.target.closest(".product");
-    let productName = product.querySelector("h3").textContent;
-    let productPrice = product.querySelector(".price").textContent;
-    let productImage = product.querySelector("img").src;
-
-    // Replace cart with only this product (so checkout page has only this item)
-    let cart = [{
-        name: productName,
-        price: productPrice,
-        image: productImage,
-        quantity: 1
-    }];
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    window.location.href = "checkout.html"; // Redirect to checkout page
 }
 
 // Show Cart Functionality
