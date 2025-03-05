@@ -164,12 +164,11 @@ button {
     padding: 12px;
     font-size: auto;
     flex: 1;
-    /* Makes buttons share available space */
     max-width: 48%;
-    /* Ensures they stay within their column */
     width: 100%;
     border-radius: 4px;
     cursor: pointer;
+    margin: 5px;
 }
 
 button:hover {
@@ -222,8 +221,7 @@ button:hover {
     flex-direction: column;
     position: absolute;
     left: 0;
-    width: 100px; 
-    min-width: 300px; 
+    width: 300px; 
     border-radius: 5px;
     overflow: hidden;
 }
