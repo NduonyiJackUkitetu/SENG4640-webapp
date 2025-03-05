@@ -50,39 +50,6 @@ body {
     background: white;
     color: black;
 }
-/* Common styles for both buttons */
-.search-bar button {
-    padding: 5px 5px;
-    font-size: 16px;
-    cursor: pointer;
-    height: 40px; /* Keeps uniform height */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-}
-
-/* Search button styling */
-.search-bar button:first-of-type {
-    background-color: #007bff;
-    border: 2px solid #007bff;
-    color: white;
-}
-
-.search-bar button:first-of-type:hover {
-    background-color: #0056b3;
-}
-
-/* Cart button styling */
-#cartButton {
-    background-color: #28a745; /* Green color */
-    border: 2px solid #28a745;
-    color: white;
-}
-
-#cartButton:hover {
-    background-color: #218838;
-}
 
 /* Individual product card styling */
 .product {
@@ -98,30 +65,6 @@ body {
     flex-direction: column;
     height: 100%;
     /* Ensures uniform height */
-}
-
-/* Ensures product information is pushed to the bottom */
-.product .product-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    flex-grow: 1;
-    /* Allows content to expand within the container */
-}
-
-.product .product-select {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    flex: 1 1 48%;
-}
-
-.product .product-select .button-container {
-    display: flex;
-    gap: 10px;
-    /* Adds spacing between buttons */
-    justify-content: space-between;
-    /* Distributes buttons evenly */
 }
 
 /* Styles product images to be uniform in size and shape */
@@ -164,7 +107,7 @@ button {
     padding: 12px;
     font-size: auto;
     flex: 1;
-    max-width: 48%;
+    max-width: 95%;
     width: 100%;
     border-radius: 4px;
     cursor: pointer;
@@ -182,28 +125,12 @@ button:hover {
     margin-top: 20px;
 }
 
-#addProductButton {
-    background-color: #28a745; /* Green color */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-#addProductButton:hover {
-    background-color: #218838;
-}
-
-
 /* Hamburger Menu Styles */
 .hamburger-menu {
     position: absolute;
     top: 15px;
     left: 15px;
-    width: 150px;
+    width: 80px;
 }
 
 #menuToggle {
@@ -221,7 +148,7 @@ button:hover {
     flex-direction: column;
     position: absolute;
     left: 0;
-    width: 300px; 
+    width: 150px; 
     border-radius: 5px;
     overflow: hidden;
 }
