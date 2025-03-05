@@ -7,12 +7,14 @@ body {
 
 /* Styles the header section with a background image and centered text */
 .header {
+    position: relative; /* Ensures child elements position correctly */
     background-image: url(images/image-login-background.jpg);
     background-position: center;
-    height: 250px;
+    height: 300px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Push search bar to the bottom */
     color: white;
     font-size: 2em;
     font-weight: bold;
@@ -28,25 +30,26 @@ body {
 
 /* search bar */
 .search-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px auto; /* Centers the search bar */
-    width: 20%;
-    gap: 10px; /* Adds spacing between elements */
+    position: absolute;  /* Position it inside the header */
+    bottom: 20px;  /* Moves it to the bottom */
+    left: 50%;
+    transform: translateX(-50%);  /* Centers horizontally */
+    width: 50%; /* Adjust width to fit the design */
+    max-width: 400px;
+    padding: 10px;
+    border-radius: 10px;
 }
 
-/* Ensure input, search button, and cart button have equal height */
+/* Search Input Styling */
 .search-bar input {
-    flex: 1;
+    width: 100%;
     padding: 10px;
     font-size: 16px;
-    border: 2px solid #ddd;
+    border: none;
     border-radius: 5px;
-    outline: none;
-    height: 15px; /* Keeps uniform height */
+    background: white;
+    color: black;
 }
-
 /* Common styles for both buttons */
 .search-bar button {
     padding: 5px 5px;
@@ -194,6 +197,75 @@ button:hover {
 #addProductButton:hover {
     background-color: #218838;
 }
+
+
+/* Hamburger Menu Styles */
+.hamburger-menu {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 150px;
+}
+
+#menuToggle {
+    font-size: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    color: white;
+}
+
+/* Adjust menu size */
+.menu-content {
+    display: none; 
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    width: 100px; 
+    min-width: 300px; 
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.menu-content button:hover {
+    background-color: #0056b3;
+}
+
+/* Display menu when active */
+.menu-content.show {
+    display: flex;
+    animation: slideDown 0.3s ease-in-out;
+}
+
+/* Smooth Drop-down Effect */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Slide Down Animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
 
 /* Responsive Design: Adjusts product width for medium screens */
 @media (max-width: 1400px) {

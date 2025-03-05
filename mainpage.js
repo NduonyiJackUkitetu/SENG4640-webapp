@@ -4,20 +4,37 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get active user
     const activeUser = JSON.parse(localStorage.getItem("activeUser"));
 
-    // Check user role and show/hide "Add Product" button
+    // Show/hide "Add Product" button based on user role
     const addProductButton = document.getElementById("addProductButton");
     if (activeUser && activeUser.role === "owner") {
-        addProductButton.style.display = "block"; // Show button for owners
+        addProductButton.style.display = "block";
         addProductButton.addEventListener("click", () => {
             window.location.href = "createProduct.html";
         });
     }
 
+    // Log Out Button Functionality
+    document.getElementById("logoutButton").addEventListener("click", () => {
+        localStorage.removeItem("activeUser");
+        showToast("You have been logged out.");
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1000);
+    });
+
     document.getElementById("searchInput").addEventListener("input", searchProducts);
-    document.getElementById("cartButton").addEventListener("click", showCart);
+
+    // Hamburger Menu Toggle
+    const menuToggle = document.getElementById("menuToggle");
+    const menuContent = document.querySelector(".menu-content");
+
+    menuToggle.addEventListener("click", () => {
+        menuContent.classList.toggle("show"); // Toggle visibility of the menu
+    });
 });
 
-// Load Products
+
+// Load Products from Local Storage
 function loadProducts() {
     let products = JSON.parse(localStorage.getItem("products")) || [];
     let container = document.querySelector(".container");
@@ -93,7 +110,7 @@ function showCart() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     if (cart.length === 0) {
-        alert("Your cart is empty.");
+        showToast("Your cart is empty.");
         return;
     }
 
@@ -102,5 +119,24 @@ function showCart() {
         cartContent += `${item.name} - ${item.price} x ${item.quantity}\n`;
     });
 
-    alert(cartContent);
+    showToast(cartContent);
+}
+
+// Toast Notification Functionality
+function showToast(message) {
+    let toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 500);
+    }, 1500);
 }
