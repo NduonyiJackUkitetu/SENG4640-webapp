@@ -16,7 +16,7 @@ const Login = () => {
         }
 
         const storedUser = JSON.parse(localStorage.getItem(username.trim()));
-        
+
         if (storedUser && storedUser.password === password.trim()) {
             navigate("/mainpage"); // Redirect to main page
         } else {
@@ -30,36 +30,38 @@ const Login = () => {
     };
 
     return (
-        <div className="login-container">
-            <h2>Login</h2>
-            <form>
-                <div className="input-group">
-                    <input
-                        type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="input-group">
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <button type="submit" className="login-btn" onClick={handleLogin}>
-                        Login
-                    </button>
-                    <button type="submit" className="create-account-btn" onClick={handleCreateAccount}>
-                        Create Account
-                    </button>
-                </div>
-            </form>
+        <div className="login-page">
+            <div className="login-container">
+                <h2>Login</h2>
+                <form>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <button type="submit" className="login-btn" onClick={handleLogin}>
+                            Login
+                        </button>
+                        <button type="submit" className="create-account-btn" onClick={handleCreateAccount}>
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };

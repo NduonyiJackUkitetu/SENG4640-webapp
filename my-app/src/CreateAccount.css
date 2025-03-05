@@ -1,16 +1,27 @@
-/* Basic Reset and Styling */
+/* Basic Reset and Styling
 html,
 body {
     height: 100%;
     margin: 0;
     padding: 0;
+} */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden; /* Prevents any horizontal gaps */
 }
 
-body {
+.createaccount-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(images/image-login-background.jpg);
+    height: 100vh;
+    width: 100vw;
+    background-image: url(https://i.imgur.com/s6mtWYY.jpeg);
+    background-size: cover;
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     overflow: auto;
@@ -96,7 +107,7 @@ button:hover {
     body {
         align-items: flex-start;
         /* Moves form higher up if screen is too short */
-        padding-top: 20px;
+        padding-top: 0px;
         /* Adds breathing room */
     }
 }

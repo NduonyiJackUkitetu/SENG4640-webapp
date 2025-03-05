@@ -52,42 +52,44 @@ const CreateAccount = () => {
     };
 
     return (
-        <div className="createaccount-container">
-            <h1>Create Account</h1>
-            <form onSubmit={handleSubmit}>
-                <fieldset>
-                    <legend>Account Details</legend>
-                    <div className="form-group">
-                        <label htmlFor="fullName">Full Name</label>
-                        <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="address">Address</label>
-                        <input type="text" id="address" name="address" value={formData.address} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="city">City</label>
-                        <input type="text" id="city" name="city" value={formData.city} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="state">State</label>
-                        <input type="text" id="state" name="state" value={formData.state} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="zip">Zip Code</label>
-                        <input type="text" id="zip" name="zip" value={formData.zip} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
-                    </div>
-                </fieldset>
-                <button type="submit">Create Account</button>
-            </form>
+        <div className="createaccount-page">
+            <div className="createaccount-container">
+                <h1>Create Account</h1>
+                <form onSubmit={handleSubmit}>
+                    <fieldset>
+                        <legend>Account Details</legend>
+                        <div className="form-group">
+                            <label htmlFor="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="address">Address</label>
+                            <input type="text" id="address" name="address" value={formData.address} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="city">City</label>
+                            <input type="text" id="city" name="city" value={formData.city} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="state">State</label>
+                            <input type="text" id="state" name="state" value={formData.state} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="zip">Zip Code</label>
+                            <input type="text" id="zip" name="zip" value={formData.zip} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
+                        </div>
+                    </fieldset>
+                    <button type="submit">Create Account</button>
+                </form>
+            </div>
         </div>
     );
 };
