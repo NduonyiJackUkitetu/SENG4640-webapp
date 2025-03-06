@@ -35,26 +35,19 @@ body {
     border-radius: 5px;
 }
 
-/* Button styling */
-.login-btn,
-.create-account-btn {
-    background-color: #007bff;
-    color: white;
+button {
+    background-color: #007bff !important;
+    color: #fff;
     border: none;
-    padding: 10px;
-    width: 90%;
-    border-radius: 5px;
+    padding: 12px;
+    font-size: auto;
+    flex: 1;
+    width: 95%;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
+    margin: 5px;
 }
 
-/* Button hover effect */
-.login-btn:hover,
-.create-account-btn:hover {
-    background-color: #0056b3;
-}
-
-/* Spacing between buttons */
-.button-group button {
-    margin-top: 10px;
+button:hover {
+    background-color: #0056b3 !important;
 }

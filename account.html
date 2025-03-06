@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information</title>
+    <link rel="stylesheet" href="account.css"> <!-- Link to CSS -->
+</head>
+<body>
+
+    <div class="account-container">
+        <h2>Account Information</h2>
+
+        <form id="accountForm">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName">
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address">
+
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city">
+
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state">
+
+            <label for="zip">Zip Code:</label>
+            <input type="text" id="zip" name="zip">
+
+            <label for="role">Role:</label>
+            <input type="text" id="role" name="role" readonly> <!-- Cannot edit role -->
+
+            <div class="button-container">
+                <button type="button" id="saveChanges">Save Changes</button>
+                <button type="button" id="cancelChanges">Cancel</button>
+                <button type="button" id="logoutButton">Log Out</button>
+            </div>
+        </form>
+
+    </div>
+
+    <script src="account.js"></script> <!-- Link to JavaScript -->
+</body>
+</html>

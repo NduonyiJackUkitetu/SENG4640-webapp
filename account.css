@@ -1,11 +1,10 @@
-/* Basic Reset and Styling */
+
 html,
 body {
     height: 100%;
     margin: 0;
     padding: 0;
 }
-
 body {
     display: flex;
     justify-content: center;
@@ -16,7 +15,7 @@ body {
     overflow: auto;
 }
 
-.createproduct-container {
+.account-container {
     background-color: #fff;
     width: 90%;
     max-width: 600px;
@@ -27,30 +26,13 @@ body {
     position: relative;
 }
 
-h1 {
+h2 {
     text-align: center;
     margin-bottom: 20px;
 }
 
-/* Form Styling */
 form {
     margin-top: 10px;
-}
-
-fieldset {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-}
-
-legend {
-    padding: 0 10px;
-    font-weight: bold;
-}
-
-.form-group {
-    margin-bottom: 15px;
 }
 
 label {
@@ -59,14 +41,18 @@ label {
     font-weight: bold;
 }
 
-input[type="text"],
-input[type="number"],
-textarea {
+input {
     width: 100%;
     padding: 8px;
-    box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.button-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 button {
@@ -81,10 +67,19 @@ button {
     margin-top: 10px;
 }
 
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 button:hover {
     background-color: #0056b3;
 }
-
 @media (max-height: 1000px) {
     body {
         align-items: flex-start;
