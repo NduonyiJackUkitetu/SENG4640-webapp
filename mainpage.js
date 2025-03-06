@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Log Out Button Functionality
     document.getElementById("logoutButton").addEventListener("click", () => {
         localStorage.removeItem("activeUser");
-        alert("You have been logged out.");
         window.location.href = "login.html";
     });
 
