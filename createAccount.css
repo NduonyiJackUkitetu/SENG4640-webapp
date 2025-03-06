@@ -20,9 +20,7 @@ body {
 .createaccount-container {
     background-color: #fff;
     width: 90%;
-    /* Responsive width */
     max-width: 600px;
-    /* Set a reasonable max width */
     margin: 0 auto;
     padding: 20px 30px;
     border-radius: 8px;
@@ -84,6 +82,7 @@ button {
     font-size: 16px;
     width: 100%;
     border-radius: 4px;
+    margin: 5px;
     cursor: pointer;
 }
 
