@@ -38,8 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Save updated products list to localStorage
         localStorage.setItem("products", JSON.stringify(products));
 
-        alert("Product added successfully!");
-
         // Redirect to main page
         window.location.href = "mainpage.html";
     });
