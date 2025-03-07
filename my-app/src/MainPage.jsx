@@ -65,6 +65,19 @@ const MainPage = () => {
         }
     };
 
+    // Modify product
+    const handleModifyProduct = (index) => {
+        if (user?.role !== "owner") {
+            alert("You are not authorized to modify products.");
+            return;
+        }
+
+        localStorage.setItem("selectedProductIndex", index);
+        localStorage.setItem("allProducts", JSON.stringify(products));
+        navigate("/modifyProduct");
+    };
+
+
     return (
         <div className="mainpage">
             {/* Header Section */}
@@ -109,7 +122,7 @@ const MainPage = () => {
                                     {user?.role === "owner" && (
                                         <>
                                             <button className="delete-product" onClick={() => handleDeleteProduct(index)}>Delete</button>
-                                            <button className="modify-product">Modify</button>
+                                            <button className="modify-product" onClick={() => handleModifyProduct(index)}>Modify</button>
                                         </>
                                     )}
                                 </div>
