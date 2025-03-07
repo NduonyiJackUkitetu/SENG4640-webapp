@@ -77,6 +77,28 @@ const MainPage = () => {
         navigate("/modifyProduct");
     };
 
+    // Add to Cart Functionality
+    const handleAddToCart = (index) => {
+        const product = products[index];
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        const existingProduct = cart.find((item) => item.name === product.name);
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+    };
+
+    // Buy Now Functionality
+    const handleBuyNow = (index) => {
+        const product = products[index];
+        const cart = [{ ...product, quantity: 1 }];
+        localStorage.setItem("cart", JSON.stringify(cart));
+        navigate("/checkout");
+    };
 
     return (
         <div className="mainpage">
@@ -117,8 +139,8 @@ const MainPage = () => {
                                 <p>{product.description}</p>
                                 <div className="price">{product.price}</div>
                                 <div className="button-container">
-                                    <button className="buy-now">Buy Now</button>
-                                    <button className="add-to-cart">Add to Cart</button>
+                                    <button className="buy-now" onClick={() => handleBuyNow(index)}>Buy Now</button>
+                                    <button className="add-to-cart" onClick={() => handleAddToCart(index)}>Add to Cart</button>
                                     {user?.role === "owner" && (
                                         <>
                                             <button className="delete-product" onClick={() => handleDeleteProduct(index)}>Delete</button>
