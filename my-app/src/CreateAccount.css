@@ -1,113 +1,156 @@
-/* Basic Reset and Styling
-html,
-body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-} */
-
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden; /* Prevents any horizontal gaps */
-}
-
+/* Full-page styling */
 .createaccount-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     background-image: url(https://i.imgur.com/s6mtWYY.jpeg);
     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    overflow: auto;
 }
 
-
+/* Create Account container */
 .createaccount-container {
-    background-color: #fff;
+    background: #ffffff;
+    padding: 15px 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     width: 90%;
-    /* Responsive width */
     max-width: 600px;
-    /* Set a reasonable max width */
-    margin: 0 auto;
-    padding: 20px 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-h1 {
     text-align: center;
-    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
+/* Heading styling */
+.createaccount-container h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
 
-/* Form Styling */
-form {
+/* Form styling */
+.createaccount-container form {
     margin-top: 10px;
 }
 
-fieldset {
+.createaccount-container fieldset {
     border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-}
-
-legend {
-    padding: 0 10px;
-    font-weight: bold;
-}
-
-.form-group {
+    padding: 10px;
     margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
+/* Legend styling */
+.createaccount-container legend {
+    padding: 5px 10px;
     font-weight: bold;
+    color: #444;
+    font-size: 18px;
 }
 
+/* Form group styling */
+.createaccount-container .form-group {
+    margin-bottom: 18px;
+    text-align: left;
+}
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"] {
+/* Label styling */
+.createaccount-container label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Ensure uniform width and box sizing */
+.createaccount-container input[type="text"],
+.createaccount-container input[type="password"],
+.createaccount-container select {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     box-sizing: border-box;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fff;
+    transition: all 0.3s ease-in-out;
+    display: block; /* Ensures correct rendering */
+}
+
+/* Fix any overflow or inconsistencies */
+.createaccount-container .form-group input,
+.createaccount-container .form-group select {
+    width: 100%; /* Force input fields to take full width */
+    max-width: 100%; /* Prevents them from exceeding their container */
 }
 
 
-button {
+/* Input focus effect */
+.createaccount-container input:focus,
+.createaccount-container select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Button styling */
+.createaccount-container button {
     background-color: #007bff;
-    color: #fff;
+    color: #ffffff;
     border: none;
-    padding: 12px;
+    padding: 12px 15px;
     font-size: 16px;
     width: 100%;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out;
 }
 
-button:hover {
+/* Button hover effect */
+.createaccount-container button:hover {
     background-color: #0056b3;
 }
 
+/* Back to login button */
+.createaccount-container button:nth-of-type(2) {
+    background-color: #6c757d;
+}
 
-@media (max-height: 1000px) {
-    body {
-        align-items: flex-start;
-        /* Moves form higher up if screen is too short */
-        padding-top: 0px;
-        /* Adds breathing room */
+.createaccount-container button:nth-of-type(2):hover {
+    background-color: #5a6268;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .createaccount-container {
+        width: 95%;
+    }
+
+    .createaccount-container fieldset {
+        padding: 15px;
+    }
+
+    .createaccount-container button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
