@@ -34,10 +34,11 @@ const CreateAccount = () => {
         }
 
         // Validate ZIP code (must be at least 5 digits)
-        if (!/^\d{5,}$/.test(zip)) {
-            alert("Please enter a valid ZIP code (at least 5 digits).");
+        if (!/^\d{5}(-\d{4})?$|^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/.test(zip)) {
+            alert("Please enter a valid ZIP or postal code (e.g., 12345, 12345-6789, A1B 2C3).");
             return;
         }
+        
 
         // Validate password match
         if (password !== confirmPassword) {
