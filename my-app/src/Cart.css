@@ -1,0 +1,142 @@
+/* Full page styling */
+.cart-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url(https://i.imgur.com/s6mtWYY.jpeg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Cart Container */
+.cart-container {
+    width: 60%;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Empty Cart Message */
+.empty-cart {
+    font-size: 1.2em;
+    color: #555;
+}
+
+/* Cart Items */
+.cart-items {
+    margin: 20px 0;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+}
+
+/* Product Image */
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Product Details */
+.cart-item-details {
+    flex-grow: 1;
+    text-align: left;
+    padding-left: 15px;
+}
+
+/* Quantity Controls */
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-btn {
+    background-color: #007bff;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    border-radius: 4px;
+}
+
+.quantity-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Remove Button */
+.remove-btn {
+    background-color: red;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    border-radius: 4px;
+}
+
+.remove-btn:hover {
+    background-color: darkred;
+}
+
+/* Cart Footer */
+.cart-footer {
+    margin-top: 20px;
+}
+
+/* Checkout Button */
+#checkoutButton {
+    background-color: #28a745; /* Green */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: white;
+}
+
+#checkoutButton:hover {
+    background-color: #218838;
+}
+
+/* Continue Shopping Button */
+.continue-shopping {
+    background-color: #007bff;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: white;
+    margin-top: 10px;
+}
+
+.continue-shopping:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 800px) {
+    .cart-container {
+        width: 90%;
+    }
+    
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cart-item-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

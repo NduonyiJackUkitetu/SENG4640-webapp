@@ -1,0 +1,85 @@
+/* General styling */
+.createproduct-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url(https://i.imgur.com/s6mtWYY.jpeg);
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Product creation container */
+.createproduct-container {
+    background-color: #fff;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.createproduct-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+.createproduct-form-group {
+    margin-bottom: 15px;
+}
+
+.createproduct-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.createproduct-form-group input,
+.createproduct-form-group textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+/* Button styles */
+.createproduct-add-btn,
+.createproduct-back-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.createproduct-add-btn:hover,
+.createproduct-back-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 100%) {
+    .createproduct-container {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+@media (max-height: 100%) {
+    .createproduct-page {
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+}
