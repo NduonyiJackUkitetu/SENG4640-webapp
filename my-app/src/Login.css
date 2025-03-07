@@ -1,75 +1,65 @@
-/* Center the login container */
-
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden; /* Prevents any horizontal gaps */
-}
-
+/* Full-page styling */
 .login-page {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     width: 100vw;
-    background-image: url(https://i.imgur.com/s6mtWYY.jpeg); /* Use your correct image URL */
-    background-size: cover; /* Ensures the image covers the entire screen */
-    background-position: center; /* Centers the image */
-    background-repeat: no-repeat; /* Prevents repeating */
+    background-image: url(https://i.imgur.com/s6mtWYY.jpeg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
 }
 
 /* Login container styling */
-.login-page .login-container {
+.login-container {
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 20%;
+    width: 300px;
     text-align: center;
 }
 
-/* Adjust heading spacing */
-.login-page .login-container h2 {
-    margin-bottom: 15%;
+/* Heading spacing */
+.login-container h2 {
+    margin-bottom: 20px;
 }
 
 /* Input field styling */
-.login-page .input-group {
+.input-group {
     margin-bottom: 15px;
 }
 
-.login-page .input-group input {
-    width: 90%;
+.input-group input {
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
 /* Button styling */
-.login-page .login-btn,
-.login-page .create-account-btn {
+button {
     background-color: #007bff;
-    color: white;
+    color: #fff;
     border: none;
-    padding: 10px;
-    width: 90%;
-    border-radius: 5px;
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
+    margin: 5px 0;
+    transition: background-color 0.3s ease-in-out;
 }
 
-/* Button hover effect */
-.login-page .login-btn:hover,
-.login-page .create-account-btn:hover {
+button:hover {
     background-color: #0056b3;
 }
 
-/* Spacing between buttons */
-.login-page .button-group button {
-    margin-top: 10px;
+/* Responsive Design */
+@media (max-width: 600px) {
+    .login-container {
+        width: 90%;
+    }
 }
