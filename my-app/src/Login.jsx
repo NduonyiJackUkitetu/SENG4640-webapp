@@ -1,29 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Import axios for API calls
 import "./Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     // Handle Login
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
+        setError(""); // Clear previous errors
 
         if (!username.trim() || !password.trim()) {
-            alert("Please enter your username and password.");
+            setError("Please enter your username and password.");
             return;
         }
 
-        // Retrieve stored user data
-        const storedUser = JSON.parse(localStorage.getItem(username.trim()));
+        try {
+            const response = await axios.post("http://localhost:5000/login", {
+                username,
+                password,
+            });
 
-        if (storedUser && storedUser.password === password.trim()) {
-            localStorage.setItem("activeUser", JSON.stringify(storedUser)); // Save active user
-            navigate("/mainpage"); // Redirect to main page
-        } else {
-            alert("Invalid username or password.");
+            if (response.status === 200) {
+                sessionStorage.setItem("activeUser", JSON.stringify(response.data.user)); // Store user in session storage
+                navigate("/mainpage"); // Redirect to main page
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || "Login failed. Try again.");
         }
     };
 
@@ -36,6 +43,7 @@ const Login = () => {
         <div className="login-page">
             <div className="login-container">
                 <h2>Login</h2>
+                {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleLogin}>
                     <div className="input-group">
                         <input
