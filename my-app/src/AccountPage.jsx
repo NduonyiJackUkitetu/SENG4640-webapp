@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./AccountPage.css";
 
 const AccountPage = () => {
@@ -14,14 +15,26 @@ const AccountPage = () => {
     });
 
     useEffect(() => {
-        const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+        const activeUser = JSON.parse(sessionStorage.getItem("activeUser"));
 
-        if (activeUser) {
-            setUser(activeUser);
-        } else {
+        if (!activeUser) {
             alert("No account found. Please log in.");
             navigate("/");
+            return;
         }
+
+        // Fetch user details from MongoDB
+        const fetchUserDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/account/${activeUser.userId}`);
+                setUser(response.data);
+            } catch (error) {
+                console.error("Error fetching user details:", error);
+                alert("Failed to load account details.");
+            }
+        };
+
+        fetchUserDetails();
     }, [navigate]);
 
     // Handle input changes
@@ -33,9 +46,15 @@ const AccountPage = () => {
     };
 
     // Handle Save Changes
-    const handleSaveChanges = () => {
-        localStorage.setItem("activeUser", JSON.stringify(user));
-        alert("Account details updated successfully!");
+    const handleSaveChanges = async () => {
+        try {
+            const activeUser = JSON.parse(sessionStorage.getItem("activeUser"));
+            await axios.put(`http://localhost:5000/account/${activeUser.userId}`, user);
+            alert("Account details updated successfully!");
+        } catch (error) {
+            console.error("Error updating account details:", error);
+            alert("Failed to update account details.");
+        }
     };
 
     // Handle Cancel
@@ -45,7 +64,7 @@ const AccountPage = () => {
 
     // Handle Logout
     const handleLogout = () => {
-        localStorage.removeItem("activeUser");
+        sessionStorage.removeItem("activeUser");
         navigate("/");
     };
 

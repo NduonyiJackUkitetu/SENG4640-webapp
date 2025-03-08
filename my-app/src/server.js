@@ -72,7 +72,7 @@ app.post("/login", async (req, res) => {
         }
 
         // Send back user data without the password
-        res.status(200).json({ user: { fullName: user.fullName, role: user.role } });
+        res.status(200).json({ user: { userId: user.userId, fullName: user.fullName, role: user.role } });
 
     } catch (error) {
         console.error(error);
@@ -182,6 +182,53 @@ app.delete("/delete-product/:id", async (req, res) => {
     }
 });
 
+// Route to Get User Details by ID
+app.get("/account/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findOne({ userId });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Return user details (excluding password)
+        res.json({
+            fullName: user.fullName,
+            address: user.address,
+            city: user.city,
+            state: user.state,
+            zip: user.zip,
+            role: user.role
+        });
+    } catch (error) {
+        console.error("Error fetching user details:", error);
+        res.status(500).json({ message: "Server error. Try again later." });
+    }
+});
+
+// Route to Update User Details
+app.put("/account/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { fullName, address, city, state, zip } = req.body;
+
+        const updatedUser = await User.findOneAndUpdate(
+            { userId },
+            { fullName, address, city, state, zip },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        res.json({ message: "Account updated successfully!" });
+    } catch (error) {
+        console.error("Error updating user details:", error);
+        res.status(500).json({ message: "Server error. Try again later." });
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
