@@ -64,18 +64,24 @@ const MainPage = () => {
         }
     };
 
-    // Add to Cart Functionality
-    const handleAddToCart = (product) => {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        const existingProduct = cart.find((item) => item.productId === product.productId);
-        if (existingProduct) {
-            existingProduct.quantity += 1;
-        } else {
-            cart.push({ ...product, quantity: 1 });
+    // Handle Add to Cart (API Call)
+    const handleAddToCart = async (product) => {
+        if (!user) {
+            alert("You must be logged in to add to cart.");
+            return;
         }
 
-        localStorage.setItem("cart", JSON.stringify(cart));
+        try {
+            await axios.post("http://localhost:5000/cart/add", {
+                userId: user.userId,
+                productId: product.productId,
+            });
+
+            alert(`${product.name} added to cart!`);
+        } catch (error) {
+            console.error("Failed to add to cart:", error);
+            alert("Could not add product to cart. Try again later.");
+        }
     };
 
     // Buy Now Functionality

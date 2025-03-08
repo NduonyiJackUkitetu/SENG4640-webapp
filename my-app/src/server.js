@@ -5,6 +5,7 @@ import cors from "cors";
 import bcrypt from "bcryptjs";
 import User from "./models/User.js"; // Ensure correct path
 import Product from "./models/Product.js";
+import Cart from "./models/Cart.js"; // Import Cart Model
 
 import { ObjectId } from "mongodb";
 
@@ -227,6 +228,117 @@ app.put("/account/:userId", async (req, res) => {
     } catch (error) {
         console.error("Error updating user details:", error);
         res.status(500).json({ message: "Server error. Try again later." });
+    }
+});
+
+app.post("/cart/add", async (req, res) => {
+    try {
+        const { userId, productId } = req.body;
+
+        // Check if user exists
+        const user = await User.findOne({ userId });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Check if product exists
+        const product = await Product.findOne({ productId });
+        if (!product) {
+            return res.status(404).json({ message: "Product not found." });
+        }
+
+        // Find user's cart
+        let cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            // Create a new cart if not found
+            cart = new Cart({ userId, products: [{ productId, quantity: 1 }] });
+        } else {
+            // Check if product is already in the cart
+            const existingProduct = cart.products.find(item => item.productId === productId);
+            if (existingProduct) {
+                existingProduct.quantity += 1; // Increase quantity
+            } else {
+                cart.products.push({ productId, quantity: 1 });
+            }
+        }
+
+        await cart.save();
+        res.status(200).json({ message: "Product added to cart!", cart });
+
+    } catch (error) {
+        console.error("Error adding to cart:", error);
+        res.status(500).json({ message: "Server Error. Try again later." });
+    }
+});
+
+app.get("/cart/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const cart = await Cart.findOne({ userId }).populate("products.productId");
+
+        if (!cart) {
+            return res.status(200).json({ products: [] }); // Empty cart
+        }
+
+        res.status(200).json(cart);
+    } catch (error) {
+        console.error("Error fetching cart:", error);
+        res.status(500).json({ message: "Server Error. Try again later." });
+    }
+});
+
+app.put("/cart/update", async (req, res) => {
+    try {
+        const { userId, productId, quantityChange } = req.body;
+
+        let cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found." });
+        }
+
+        const productIndex = cart.products.findIndex(item => item.productId === productId);
+        if (productIndex !== -1) {
+            cart.products[productIndex].quantity = Math.max(1, cart.products[productIndex].quantity + quantityChange);
+        }
+
+        await cart.save();
+        res.status(200).json({ message: "Cart updated successfully!", cart });
+    } catch (error) {
+        console.error("Error updating cart:", error);
+        res.status(500).json({ message: "Server Error. Try again later." });
+    }
+});
+
+app.delete("/cart/remove", async (req, res) => {
+    try {
+        const { userId, productId } = req.body;
+
+        let cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found." });
+        }
+
+        cart.products = cart.products.filter(item => item.productId !== productId);
+        await cart.save();
+
+        res.status(200).json({ message: "Product removed from cart.", cart });
+    } catch (error) {
+        console.error("Error removing product from cart:", error);
+        res.status(500).json({ message: "Server Error. Try again later." });
+    }
+});
+
+app.post("/products/details", async (req, res) => {
+    try {
+        const { productIds } = req.body;
+        const products = await Product.find({ productId: { $in: productIds } });
+        res.json(products);
+    } catch (error) {
+        console.error("Failed to fetch product details:", error);
+        res.status(500).json({ message: "Server error" });
     }
 });
 
