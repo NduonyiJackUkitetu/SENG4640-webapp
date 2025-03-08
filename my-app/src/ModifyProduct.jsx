@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./ModifyProduct.css";
 
 const ModifyProduct = () => {
     const navigate = useNavigate();
+    const [productId, setProductId] = useState("");
     const [productData, setProductData] = useState({
         name: "",
         description: "",
@@ -12,37 +14,36 @@ const ModifyProduct = () => {
     });
 
     useEffect(() => {
-        const selectedProductIndex = parseInt(localStorage.getItem("selectedProductIndex"), 10);
-        if (isNaN(selectedProductIndex)) {
+        const selectedProductId = sessionStorage.getItem("selectedProductId");
+
+        if (!selectedProductId) {
             alert("No product selected for modification.");
             navigate("/mainpage");
             return;
         }
 
-        const defaultProducts = [
-            { name: "GPU AMD", description: "High-performance GPU", price: "$499.99", image: "https://i.imgur.com/O7IjlrC.jpeg" },
-            { name: "GPU Nvidia", description: "Powerful gaming GPU", price: "$599.99", image: "https://i.imgur.com/GlaVtyl.jpeg" },
-            { name: "Gaming Mouse", description: "Ergonomic gaming mouse", price: "$39.99", image: "https://i.imgur.com/cYfD4aM.jpeg" },
-            { name: "Motherboard", description: "High-end motherboard", price: "$199.99", image: "https://i.imgur.com/qNninPn.jpeg" },
-        ];
+        setProductId(selectedProductId);
 
-        let storedProducts = JSON.parse(localStorage.getItem("products")) || [];
-        let allProducts = [...defaultProducts, ...storedProducts];
+        // Fetch product details from database
+        const fetchProduct = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/products/${selectedProductId}`);
+                const product = response.data;
 
-        if (selectedProductIndex < 0 || selectedProductIndex >= allProducts.length) {
-            alert("Invalid product selected.");
-            navigate("/mainpage");
-            return;
-        }
+                setProductData({
+                    name: product.name,
+                    description: product.description,
+                    price: product.price,
+                    image: product.image,
+                });
+            } catch (error) {
+                console.error("Failed to fetch product details:", error);
+                alert("Failed to load product details.");
+                navigate("/mainpage");
+            }
+        };
 
-        let selectedProduct = allProducts[selectedProductIndex];
-
-        setProductData({
-            name: selectedProduct.name,
-            description: selectedProduct.description,
-            price: selectedProduct.price.replace("$", ""),
-            image: selectedProduct.image,
-        });
+        fetchProduct();
     }, [navigate]);
 
     // Handle input changes
@@ -54,12 +55,11 @@ const ModifyProduct = () => {
         }));
     };
 
-    // Handle form submission
-    const handleSubmit = (event) => {
+    // Handle form submission (Update product)
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const { name, description, price, image } = productData;
-        const selectedProductIndex = parseInt(localStorage.getItem("selectedProductIndex"), 10);
 
         if (!name || !description || !price || !image) {
             alert("Please fill in all fields.");
@@ -71,25 +71,21 @@ const ModifyProduct = () => {
             return;
         }
 
-        const defaultProductsCount = 4;
-        let storedProducts = JSON.parse(localStorage.getItem("products")) || [];
-
-        if (selectedProductIndex >= defaultProductsCount) {
-            storedProducts[selectedProductIndex - defaultProductsCount] = {
+        try {
+            await axios.put(`http://localhost:5000/modify-product/${productId}`, {
                 name,
                 description,
-                price: `$${parseFloat(price).toFixed(2)}`,
+                price,
                 image,
-            };
+            });
 
-            localStorage.setItem("products", JSON.stringify(storedProducts));
-        } else {
-            alert("You cannot modify default products!");
-            return;
+            alert("Product updated successfully!");
+            navigate("/mainpage");
+
+        } catch (error) {
+            console.error("Failed to update product:", error);
+            alert("Failed to update product.");
         }
-
-        alert("Product updated successfully!");
-        navigate("/mainpage");
     };
 
     return (

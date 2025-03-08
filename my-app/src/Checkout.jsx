@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Checkout.css";
 
 const Checkout = () => {
     const [cart, setCart] = useState([]);
+    const [products, setProducts] = useState({});
     const [formData, setFormData] = useState({
         fullName: "",
         address: "",
@@ -13,21 +15,78 @@ const Checkout = () => {
         cardName: "",
         cardNumber: "",
         expiryDate: "",
-        cvv: ""
+        cvv: "",
     });
 
     const navigate = useNavigate();
+    const user = JSON.parse(sessionStorage.getItem("activeUser"));
 
-    // Load cart items
     useEffect(() => {
-        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCart(storedCart);
+        if (!user) {
+            alert("You must be logged in to checkout.");
+            navigate("/");
+            return;
+        }
+
+        const fetchCart = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/cart/${user.userId}`);
+                if (response.data && response.data.products) {
+                    setCart(response.data.products);
+                    fetchProductDetails(response.data.products);
+                }
+            } catch (error) {
+                console.error("Error fetching cart:", error);
+            }
+        };
+
+        const fetchProductDetails = async (cartItems) => {
+            try {
+                const productIds = cartItems.map(item => item.productId);
+                const response = await axios.post(`http://localhost:5000/products/details`, { productIds });
+                if (response.data) {
+                    // Convert product array to an object { productId: productDetails }
+                    const productMap = response.data.reduce((acc, product) => {
+                        acc[product.productId] = product;
+                        return acc;
+                    }, {});
+                    setProducts(productMap);
+                }
+            } catch (error) {
+                console.error("Error fetching product details:", error);
+            }
+        };
+
+        const fetchUserDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/account/${user.userId}`);
+                if (response.data) {
+                    setFormData((prevData) => ({
+                        ...prevData,
+                        fullName: response.data.fullName || "",
+                        address: response.data.address || "",
+                        city: response.data.city || "",
+                        state: response.data.state || "",
+                        zip: response.data.zip || "",
+                    }));
+                }
+            } catch (error) {
+                console.error("Error fetching user details:", error);
+            }
+        };
+
+        fetchCart();
+        fetchUserDetails();
     }, []);
 
     // Calculate total price
     const getTotalPrice = () => {
         return cart.reduce((total, item) => {
-            return total + parseFloat(item.price.replace("$", "")) * item.quantity;
+            const product = products[item.productId]; // Get product details
+            if (product) {
+                return total + parseFloat(product.price) * item.quantity;
+            }
+            return total;
         }, 0).toFixed(2);
     };
 
@@ -36,53 +95,18 @@ const Checkout = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // Validate form fields
-    const validateForm = () => {
-        const { fullName, address, city, state, zip, cardName, cardNumber, expiryDate, cvv } = formData;
-
-        if (!fullName || !address || !city || !state || !zip || !cardName || !cardNumber || !expiryDate || !cvv) {
-            alert("Please fill in all fields.");
-            return false;
-        }
-
-        const zipRegex = /(^\d{5}$)|(^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$)/;
-        if (!zipRegex.test(zip)) {
-            alert("Please enter a valid ZIP/Postal Code (5-digit ZIP or A1B2C3 format).");
-            return false;
-        }
-
-        if (!/^\d{16}$/.test(cardNumber)) {
-            alert("Please enter a valid 16-digit card number.");
-            return false;
-        }
-
-        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
-            alert("Please enter a valid expiry date in MM/YY format.");
-            return false;
-        }
-
-        if (!/^\d{3,4}$/.test(cvv)) {
-            alert("Please enter a valid CVV (3 or 4 digits).");
-            return false;
-        }
-
-        return true;
-    };
-
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!validateForm()) return;
-
-        alert("Order submitted successfully!");
-        localStorage.removeItem("cart");
-        navigate("/mainpage"); // Redirect to main page
-    };
-
-    // Continue Shopping (Redirect to Main Page)
-    const returnToShopping = () => {
-        navigate("/mainpage");
+        try {
+            await axios.post("http://localhost:5000/checkout", { userId: user.userId });
+            alert("Order placed successfully!");
+            navigate("/mainpage");
+        } catch (error) {
+            console.error("Error during checkout:", error);
+            alert("Failed to place order. Please try again.");
+        }
     };
 
     return (
@@ -95,17 +119,26 @@ const Checkout = () => {
                     {cart.length === 0 ? (
                         <p className="empty-cart">Your cart is empty.</p>
                     ) : (
-                        cart.map((item, index) => (
-                            <div key={index} className="checkout-item">
-                                <img src={item.image} alt={item.name} className="checkout-item-image" />
-                                <div className="checkout-item-details">
-                                    <h2 className="checkout-item-title">{item.name}</h2>
-                                    <p className="checkout-item-description">Quantity: {item.quantity}</p>
-                                    <p className="checkout-item-price">Price: {item.price}</p>
-                                    <p className="checkout-item-subtotal">Subtotal: ${(parseFloat(item.price.replace("$", "")) * item.quantity).toFixed(2)}</p>
+                        cart.map((item, index) => {
+                            const product = products[item.productId]; // Retrieve product details
+                            return product ? (
+                                <div key={index} className="checkout-item">
+                                    <img src={product.image} alt={product.name} className="checkout-item-image" />
+                                    <div className="checkout-item-details">
+                                        <h2 className="checkout-item-title">{product.name}</h2>
+                                        <p className="checkout-item-description">Quantity: {item.quantity}</p>
+                                        <p className="checkout-item-price">Price: ${parseFloat(product.price).toFixed(2)}</p>
+                                        <p className="checkout-item-subtotal">
+                                            Subtotal: ${(parseFloat(product.price) * item.quantity).toFixed(2)}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        ))
+                            ) : (
+                                <div key={index} className="checkout-item">
+                                    <p className="error-text">Product details missing for one item.</p>
+                                </div>
+                            );
+                        })
                     )}
                 </div>
 
@@ -159,7 +192,7 @@ const Checkout = () => {
                     </fieldset>
 
                     <button type="submit" className="checkout-button">Place Order</button>
-                    <button type="button" className="return-to-shopping" onClick={returnToShopping}>Return To Shopping</button>
+                    <button type="button" className="return-to-shopping" onClick={() => navigate("/mainpage")}>Return To Shopping</button>
                 </form>
             </div>
         </div>
