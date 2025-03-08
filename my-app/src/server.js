@@ -6,6 +6,8 @@ import bcrypt from "bcryptjs";
 import User from "./models/User.js"; // Ensure correct path
 import Product from "./models/Product.js";
 
+import { ObjectId } from "mongodb";
+
 dotenv.config();
 
 const app = express();
@@ -115,14 +117,30 @@ app.get("/products", async (req, res) => {
     }
 });
 
-// Route to Modify Product
+app.get("/products/:id", async (req, res) => {
+    try {
+        const product = await Product.findOne({ productId: req.params.id });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found." });
+        }
+
+        res.json(product);
+
+    } catch (error) {
+        console.error("Error fetching product:", error);
+        res.status(500).json({ message: "Failed to fetch product." });
+    }
+});
+
+// **Modify Product By `productId`**
 app.put("/modify-product/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const { name, description, price, image } = req.body;
 
         const updatedProduct = await Product.findOneAndUpdate(
-            { productId: id },
+            { productId: id }, // Find product by `productId`
             { name, description, price, image },
             { new: true }
         );
@@ -134,12 +152,12 @@ app.put("/modify-product/:id", async (req, res) => {
         res.json({ message: "Product updated successfully!", updatedProduct });
 
     } catch (error) {
-        console.error(error);
+        console.error("Error updating product:", error);
         res.status(500).json({ message: "Failed to update product." });
     }
 });
 
-// Route to Delete Product
+// **Delete Product By `productId`**
 app.delete("/delete-product/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -153,7 +171,7 @@ app.delete("/delete-product/:id", async (req, res) => {
         res.json({ message: "Product deleted successfully!" });
 
     } catch (error) {
-        console.error(error);
+        console.error("Error deleting product:", error);
         res.status(500).json({ message: "Failed to delete product." });
     }
 });
