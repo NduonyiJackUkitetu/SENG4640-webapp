@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./CreateProduct.css";
 
 const CreateProduct = () => {
@@ -21,9 +22,8 @@ const CreateProduct = () => {
     };
 
     // Validate and submit the form
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-
         const { name, description, price, image } = productData;
 
         if (!name || !description || !price || !image) {
@@ -37,23 +37,22 @@ const CreateProduct = () => {
             return;
         }
 
-        // Retrieve existing products from localStorage
-        let products = JSON.parse(localStorage.getItem("products")) || [];
+        try {
+            // Send data to MongoDB
+            const response = await axios.post("http://localhost:5000/create-product", {
+                name,
+                description,
+                price: parseFloat(price), // Ensure price is a number
+                image,
+            });
 
-        // Create new product object
-        let newProduct = {
-            name,
-            description,
-            price: `$${parseFloat(price).toFixed(2)}`,
-            image,
-        };
+            alert(response.data.message);
+            navigate("/mainpage"); // Redirect to main page
 
-        // Add new product to array and update localStorage
-        products.push(newProduct);
-        localStorage.setItem("products", JSON.stringify(products));
-
-        alert("Product added successfully!");
-        navigate("/mainpage"); // Redirect to main page
+        } catch (error) {
+            console.error("Failed to add product:", error);
+            alert(error.response?.data?.message || "Error adding product.");
+        }
     };
 
     return (
