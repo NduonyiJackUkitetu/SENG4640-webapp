@@ -77,7 +77,7 @@ const Checkout = () => {
 
         fetchCart();
         fetchUserDetails();
-    }, [user, navigate]);
+    }, []);
 
     // Calculate total price
     const getTotalPrice = () => {
