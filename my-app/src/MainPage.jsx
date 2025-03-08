@@ -10,22 +10,22 @@ const MainPage = () => {
     const [user, setUser] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
+    // Fetch products from the server (including search functionality)
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/products");
+                const response = await axios.get(`http://localhost:5000/products?search=${searchQuery}`);
                 setProducts(response.data);
             } catch (error) {
                 console.error("Failed to fetch products:", error);
             }
         };
 
-        // Load active user
         const activeUser = JSON.parse(sessionStorage.getItem("activeUser"));
         setUser(activeUser);
 
         fetchProducts();
-    }, []);
+    }, [searchQuery]); // Re-fetch products whenever the search query changes
 
     // Handle logout
     const handleLogout = () => {
@@ -65,11 +65,10 @@ const MainPage = () => {
     };
 
     // Add to Cart Functionality
-    const handleAddToCart = (index) => {
-        const product = products[index];
+    const handleAddToCart = (product) => {
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        const existingProduct = cart.find((item) => item.name === product.name);
+        const existingProduct = cart.find((item) => item.productId === product.productId);
         if (existingProduct) {
             existingProduct.quantity += 1;
         } else {
@@ -80,12 +79,12 @@ const MainPage = () => {
     };
 
     // Buy Now Functionality
-    const handleBuyNow = (index) => {
-        const product = products[index];
+    const handleBuyNow = (product) => {
         const cart = [{ ...product, quantity: 1 }];
         localStorage.setItem("cart", JSON.stringify(cart));
         navigate("/checkout");
     };
+
     return (
         <div className="mainpage">
             <header className="header">
@@ -120,9 +119,9 @@ const MainPage = () => {
                             <h3>{product.name}</h3>
                             <div className="product-info">
                                 <p>{product.description}</p>
-                                <div className="price">${product.price.toFixed(2)}</div>
-                                <button className="buy-now" onClick={() => handleBuyNow(index)}>Buy Now</button>
-                                <button className="add-to-cart" onClick={() => handleAddToCart(index)}>Add to Cart</button>
+                                <div className="price">${parseFloat(product.price).toFixed(2)}</div>
+                                <button className="buy-now" onClick={() => handleBuyNow(product)}>Buy Now</button>
+                                <button className="add-to-cart" onClick={() => handleAddToCart(product)}>Add to Cart</button>
                                 {user?.role === "owner" && (
                                     <>
                                         <button onClick={() => handleModifyProduct(product.productId)}>Modify</button>

@@ -109,7 +109,13 @@ app.post("/create-product", async (req, res) => {
 // Route to Get All Products
 app.get("/products", async (req, res) => {
     try {
-        const products = await Product.find();
+        const searchQuery = req.query.search || ""; // Get search query from request
+
+        // MongoDB query to filter products
+        const products = await Product.find({
+            name: { $regex: searchQuery, $options: "i" }, // Case-insensitive search
+        });
+
         res.json(products);
     } catch (error) {
         console.error(error);
