@@ -6,8 +6,10 @@ import bcrypt from "bcryptjs";
 import User from "./models/User.js"; // Ensure correct path
 import Product from "./models/Product.js";
 import Cart from "./models/Cart.js"; // Import Cart Model
+import Order from "./models/Order.js";
+import axios from "axios"; // Import axios for API calls
 
-import { ObjectId } from "mongodb";
+const ObjectId = mongoose.Types.ObjectId;
 
 dotenv.config();
 
@@ -339,6 +341,80 @@ app.post("/products/details", async (req, res) => {
     } catch (error) {
         console.error("Failed to fetch product details:", error);
         res.status(500).json({ message: "Server error" });
+    }
+});
+
+// Checkout route
+app.post("/checkout", async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        // Fetch the cart
+        const cart = await Cart.findOne({ userId });
+        if (!cart || cart.products.length === 0) {
+            return res.status(400).json({ message: "Cart is empty" });
+        }
+
+        // ✅ Fetch products using `productId` (String-based)
+        const productIds = cart.products.map(item => item.productId);
+        const productDetails = await Product.find({ productId: { $in: productIds } });
+
+        // Map product details
+        const productMap = {};
+        productDetails.forEach(product => {
+            productMap[product.productId] = product;
+        });
+
+        // Ensure all products exist
+        const orderProducts = cart.products.map((item) => {
+            const product = productMap[item.productId];
+            if (!product) {
+                console.error("Missing product details:", item);
+                throw new Error(`Product details missing for productId: ${item.productId}`);
+            }
+
+            return {
+                productId: product.productId,
+                image: product.image,
+                quantity: item.quantity,
+                cost: parseFloat(product.price) * item.quantity,
+            };
+        });
+
+        // Calculate total amount
+        const totalAmount = orderProducts.reduce((sum, item) => sum + item.cost, 0);
+
+        if (isNaN(totalAmount)) {
+            throw new Error("Total amount calculation failed.");
+        }
+
+        // Fetch order timestamp from API (fallback to local time)
+        let orderDate;
+        try {
+            const timeResponse = await axios.get("https://worldtimeapi.org/api/timezone/Etc/UTC");
+            orderDate = timeResponse.data.datetime;
+        } catch (error) {
+            console.warn("Time API failed, using local system time.");
+            orderDate = new Date().toISOString();
+        }
+
+        // Create and save the order
+        const newOrder = new Order({
+            userId,
+            products: orderProducts,
+            totalAmount,
+            orderDate,
+        });
+
+        await newOrder.save();
+
+        // Clear cart after checkout
+        await Cart.findOneAndDelete({ userId });
+
+        res.status(201).json({ message: "Order placed successfully!", order: newOrder });
+    } catch (error) {
+        console.error("Error processing checkout:", error);
+        res.status(500).json({ message: "Server error during checkout.", error: error.message });
     }
 });
 

@@ -95,13 +95,15 @@ const Checkout = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // Handle form submission
+    // Handle checkout submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            await axios.post("http://localhost:5000/checkout", { userId: user.userId });
-            alert("Order placed successfully!");
+            // Send checkout request to the backend
+            const response = await axios.post("http://localhost:5000/checkout", { userId: user.userId });
+
+            alert(`Order placed successfully! Your order time: ${response.data.order.orderDate}`);
             navigate("/mainpage");
         } catch (error) {
             console.error("Error during checkout:", error);
