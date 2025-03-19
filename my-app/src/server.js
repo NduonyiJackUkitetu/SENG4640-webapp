@@ -418,5 +418,38 @@ app.post("/checkout", async (req, res) => {
     }
 });
 
+app.get("/users", async (req, res) => {
+    try {
+        const users = await User.find({}, "-password"); // Exclude password field for security
+        res.json(users);
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Server error fetching users." });
+    }
+});
+
+app.get("/orders", async (req, res) => {
+    try {
+        const orders = await Order.find().lean(); // Get all orders
+
+        // Fetch product details for each order
+        for (let order of orders) {
+            for (let product of order.products) {
+                const productDetails = await Product.findOne({ productId: product.productId }).lean();
+                if (productDetails) {
+                    product.name = productDetails.name; // Add product name
+                    product.image = productDetails.image; // Ensure correct image
+                }
+            }
+        }
+
+        res.json(orders);
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        res.status(500).json({ message: "Failed to fetch orders" });
+    }
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
