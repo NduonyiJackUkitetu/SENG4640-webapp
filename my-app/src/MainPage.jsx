@@ -68,6 +68,7 @@ const MainPage = () => {
     const handleAddToCart = async (product) => {
         if (!user) {
             alert("You must be logged in to add to cart.");
+            navigate("/");
             return;
         }
 
@@ -85,10 +86,26 @@ const MainPage = () => {
     };
 
     // Buy Now Functionality
-    const handleBuyNow = (product) => {
-        const cart = [{ ...product, quantity: 1 }];
-        localStorage.setItem("cart", JSON.stringify(cart));
-        navigate("/checkout");
+    const handleBuyNow = async (product) => {
+        if (!user) {
+            alert("You must be logged in to make a purchase.");
+            navigate("/");
+            return;
+        }
+
+        try {
+            // Add product to cart in the database
+            await axios.post("http://localhost:5000/cart/add", {
+                userId: user.userId,
+                productId: product.productId,
+            });
+
+            // Redirect to checkout page
+            navigate("/checkout");
+        } catch (error) {
+            console.error("Error during Buy Now:", error);
+            alert("Could not process purchase. Please try again.");
+        }
     };
 
     return (
