@@ -199,6 +199,22 @@ const Checkout = () => {
 
                     <button type="submit" className="checkout-button">Place Order</button>
                     <button type="button" className="return-to-shopping" onClick={() => navigate("/mainpage")}>Return To Shopping</button>
+                    <button style={{ border: "none", background: "transparent", padding: 0 }}>
+                        <img
+                            src="https://i.imgur.com/ZCIqckE.png"
+                            alt="Buy with PayPal"
+                            style={{
+                                cursor: "pointer",
+                                height: "auto",
+                                display: "block",
+                                justifySelf: "center",
+                                width: "200px",
+                                height: "50px",
+                                borderRadius: "6px"
+                            }}
+                        />
+                    </button>
+
                 </form>
             </div>
         </div>
