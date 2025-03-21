@@ -146,6 +146,7 @@ const MainPage = () => {
                 {menuOpen && (
                     <div className="menu-content">
                         <button onClick={() => navigate("/cart")}>Cart</button>
+                        <button onClick={() => navigate("/userOrders")}>My Orders</button>
                         {user?.role === "owner" && <button onClick={handleAddProduct}>Add Product</button>}
                         {user?.role === "owner" && <button onClick={() => navigate("/managementPage")}>Management</button>}
                         <button onClick={() => navigate("/account")}>My Account</button>

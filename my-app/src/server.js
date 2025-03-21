@@ -486,6 +486,42 @@ app.get("/orders", async (req, res) => {
     }
 });
 
+app.get("/orders/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Find all orders for the user
+        const orders = await Order.find({ userId });
+
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({ message: "No orders found for this user." });
+        }
+
+        // Fetch product details for each order
+        const populatedOrders = await Promise.all(
+            orders.map(async (order) => {
+                const enrichedProducts = await Promise.all(
+                    order.products.map(async (item) => {
+                        const product = await Product.findOne({ productId: item.productId });
+                        return {
+                            productId: item.productId,
+                            name: product ? product.name : "Unknown Product",
+                            image: product ? product.image : "",
+                            quantity: item.quantity,
+                            cost: item.cost,
+                        };
+                    })
+                );
+                return { ...order._doc, products: enrichedProducts };
+            })
+        );
+
+        res.status(200).json(populatedOrders);
+    } catch (error) {
+        console.error("Error fetching user orders:", error);
+        res.status(500).json({ message: "Failed to fetch orders." });
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

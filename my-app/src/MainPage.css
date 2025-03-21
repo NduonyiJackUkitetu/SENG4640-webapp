@@ -142,13 +142,14 @@ button:hover {
     background: rgb(72, 112, 206);
     left: 0;
     top: 60px;
-    width: 150px;
+    width: 120px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .menu-content button {
-    padding: 10px;
+    padding: 5px;
+    font-size: 15px;
     text-align: left;
     border: none;
     background: none;

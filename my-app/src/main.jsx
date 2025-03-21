@@ -10,6 +10,7 @@ import CreateProduct from "./CreateProduct";
 import ModifyProduct from "./ModifyProduct";
 import AccountPage from "./AccountPage";
 import ManagementPage from "./ManagementPage";
+import UserOrders from "./UserOrders";
 import "./Login.css"; // Ensure CSS is included
 import "./CreateAccount.css"; // Ensure CSS is included
 import "./Cart.css"; // Ensure CSS is included
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/account" element={<AccountPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/managementPage" element={<ManagementPage />} />
+        <Route path="/userOrders" element={<UserOrders />} />
       </Routes>
     </Router>
   </React.StrictMode>
