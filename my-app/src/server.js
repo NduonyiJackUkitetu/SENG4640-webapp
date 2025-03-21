@@ -86,10 +86,11 @@ app.post("/login", async (req, res) => {
 // Route to Create Product (Only for Owner)
 app.post("/create-product", async (req, res) => {
     try {
-        const { name, description, price, image } = req.body;
+        const { name, description, price, image, stock } = req.body;
 
-        if (!name || !description || !price || !image) {
-            return res.status(400).json({ message: "All fields are required." });
+        // Check for missing fields
+        if (!name || !description || !price || !image || stock === undefined) {
+            return res.status(400).json({ message: "All fields are required, including stock." });
         }
 
         // Check if product already exists
@@ -98,7 +99,14 @@ app.post("/create-product", async (req, res) => {
             return res.status(400).json({ message: "Product with this name already exists." });
         }
 
-        const newProduct = new Product({ name, description, price, image });
+        // Create the new product with stock
+        const newProduct = new Product({
+            name,
+            description,
+            price,
+            image,
+            stock,
+        });
 
         await newProduct.save();
         res.status(201).json({ message: "Product created successfully!" });
@@ -108,6 +116,7 @@ app.post("/create-product", async (req, res) => {
         res.status(500).json({ message: "Server Error. Try again later." });
     }
 });
+
 
 // Route to Get All Products
 app.get("/products", async (req, res) => {
@@ -146,11 +155,11 @@ app.get("/products/:id", async (req, res) => {
 app.put("/modify-product/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, price, image } = req.body;
+        const { name, description, price, image, stock } = req.body;
 
         const updatedProduct = await Product.findOneAndUpdate(
             { productId: id }, // Find product by `productId`
-            { name, description, price, image },
+            { name, description, price, image, stock },
             { new: true }
         );
 
@@ -355,40 +364,54 @@ app.post("/checkout", async (req, res) => {
             return res.status(400).json({ message: "Cart is empty" });
         }
 
-        // ✅ Fetch products using `productId` (String-based)
+        // Fetch product details using productId
         const productIds = cart.products.map(item => item.productId);
         const productDetails = await Product.find({ productId: { $in: productIds } });
 
-        // Map product details
+        // Map products for quick lookup
         const productMap = {};
         productDetails.forEach(product => {
             productMap[product.productId] = product;
         });
 
-        // Ensure all products exist
-        const orderProducts = cart.products.map((item) => {
+        const orderProducts = [];
+
+        // Iterate through each cart item
+        for (const item of cart.products) {
             const product = productMap[item.productId];
+
             if (!product) {
                 console.error("Missing product details:", item);
                 throw new Error(`Product details missing for productId: ${item.productId}`);
             }
 
-            return {
+            // Check stock
+            if (product.stock < item.quantity) {
+                return res.status(400).json({
+                    message: `Not enough stock for "${product.name}". Available: ${product.stock}, Requested: ${item.quantity}`,
+                });
+            }
+
+            // Reduce stock
+            product.stock -= item.quantity;
+            await product.save();
+
+            // Add to order array
+            orderProducts.push({
                 productId: product.productId,
                 image: product.image,
                 quantity: item.quantity,
                 cost: parseFloat(product.price) * item.quantity,
-            };
-        });
+            });
+        }
 
         // Calculate total amount
         const totalAmount = orderProducts.reduce((sum, item) => sum + item.cost, 0);
-
         if (isNaN(totalAmount)) {
             throw new Error("Total amount calculation failed.");
         }
 
-        // Fetch order timestamp from API (fallback to local time)
+        // Get current time (from API or fallback)
         let orderDate;
         try {
             const timeResponse = await axios.get("https://worldtimeapi.org/api/timezone/Etc/UTC");
@@ -398,7 +421,7 @@ app.post("/checkout", async (req, res) => {
             orderDate = new Date().toISOString();
         }
 
-        // Create and save the order
+        // Save the order
         const newOrder = new Order({
             userId,
             products: orderProducts,
@@ -408,15 +431,17 @@ app.post("/checkout", async (req, res) => {
 
         await newOrder.save();
 
-        // Clear cart after checkout
+        // Clear cart
         await Cart.findOneAndDelete({ userId });
 
         res.status(201).json({ message: "Order placed successfully!", order: newOrder });
+
     } catch (error) {
         console.error("Error processing checkout:", error);
         res.status(500).json({ message: "Server error during checkout.", error: error.message });
     }
 });
+
 
 app.get("/users", async (req, res) => {
     try {

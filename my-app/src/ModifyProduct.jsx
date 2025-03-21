@@ -11,6 +11,7 @@ const ModifyProduct = () => {
         description: "",
         price: "",
         image: "",
+        stock: "",
     });
 
     useEffect(() => {
@@ -34,6 +35,7 @@ const ModifyProduct = () => {
                     name: product.name,
                     description: product.description,
                     price: product.price,
+                    stock: product.stock,
                     image: product.image,
                 });
             } catch (error) {
@@ -59,9 +61,9 @@ const ModifyProduct = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { name, description, price, image } = productData;
+        const { name, description, price, stock, image } = productData;
 
-        if (!name || !description || !price || !image) {
+        if (!name || !description || !price || !image || stock === "") {
             alert("Please fill in all fields.");
             return;
         }
@@ -77,6 +79,7 @@ const ModifyProduct = () => {
                 description,
                 price,
                 image,
+                stock: parseInt(stock),
             });
 
             alert("Product updated successfully!");
@@ -132,6 +135,20 @@ const ModifyProduct = () => {
                                 required
                             />
                         </div>
+
+                        <div className="modifyproduct-form-group">
+                            <label htmlFor="productStock">Stock Quantity</label>
+                            <input
+                                type="number"
+                                id="productStock"
+                                name="stock"
+                                min="0"
+                                value={productData.stock}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
 
                         <div className="modifyproduct-form-group">
                             <label htmlFor="productImage">Image URL</label>

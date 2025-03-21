@@ -10,6 +10,7 @@ const CreateProduct = () => {
         description: "",
         price: "",
         image: "",
+        stock: "",
     });
 
     // Handle input changes
@@ -24,9 +25,9 @@ const CreateProduct = () => {
     // Validate and submit the form
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const { name, description, price, image } = productData;
+        const { name, description, price, stock, image } = productData;
 
-        if (!name || !description || !price || !image) {
+        if (!name || !description || !price || !image || stock === "") {
             alert("Please fill in all fields.");
             return;
         }
@@ -43,6 +44,7 @@ const CreateProduct = () => {
                 name,
                 description,
                 price: parseFloat(price), // Ensure price is a number
+                stock: parseInt(stock),
                 image,
             });
 
@@ -95,6 +97,19 @@ const CreateProduct = () => {
                                 min="0"
                                 step="0.01"
                                 value={productData.price}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="createproduct-form-group">
+                            <label htmlFor="productStock">Stock Quantity</label>
+                            <input
+                                type="number"
+                                id="productStock"
+                                name="stock"
+                                min="0"
+                                value={productData.stock}
                                 onChange={handleChange}
                                 required
                             />

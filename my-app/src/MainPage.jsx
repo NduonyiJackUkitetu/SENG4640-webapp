@@ -72,6 +72,11 @@ const MainPage = () => {
             return;
         }
 
+        if (product.stock <= 0) {
+            alert("Product is out of stock.");
+            return;
+        }
+
         try {
             await axios.post("http://localhost:5000/cart/add", {
                 userId: user.userId,
@@ -90,6 +95,11 @@ const MainPage = () => {
         if (!user) {
             alert("You must be logged in to make a purchase.");
             navigate("/");
+            return;
+        }
+
+        if (product.stock <= 0) {
+            alert("Product is out of stock.");
             return;
         }
 
@@ -143,9 +153,13 @@ const MainPage = () => {
                             <h3>{product.name}</h3>
                             <div className="product-info">
                                 <p>{product.description}</p>
+                                <p className="stock-info">
+                                    Stock: {product.stock > 0 ? product.stock : <span style={{ color: "red" }}>Out of Stock</span>}
+                                </p>
+
                                 <div className="price">${parseFloat(product.price).toFixed(2)}</div>
-                                <button className="buy-now" onClick={() => handleBuyNow(product)}>Buy Now</button>
-                                <button className="add-to-cart" onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                                <button className="buy-now" onClick={() => handleBuyNow(product)} disabled={product.stock <= 0}>Buy Now</button>
+                                <button className="add-to-cart" onClick={() => handleAddToCart(product)} disabled={product.stock <= 0}>Add to Cart</button>
                                 {user?.role === "owner" && (
                                     <>
                                         <button onClick={() => handleModifyProduct(product.productId)}>Modify</button>

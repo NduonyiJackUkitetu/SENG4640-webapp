@@ -107,7 +107,11 @@ const Checkout = () => {
             navigate("/mainpage");
         } catch (error) {
             console.error("Error during checkout:", error);
-            alert("Failed to place order. Please try again.");
+            if (error.response?.data?.message) {
+                alert(`Checkout failed: ${error.response.data.message}`);
+            } else {
+                alert("Failed to place order. Please try again.");
+            }
         }
     };
 
