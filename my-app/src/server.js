@@ -121,19 +121,30 @@ app.post("/create-product", async (req, res) => {
 // Route to Get All Products
 app.get("/products", async (req, res) => {
     try {
-        const searchQuery = req.query.search || ""; // Get search query from request
+        const searchQuery = req.query.search || "";
+        const minPrice = parseFloat(req.query.minPrice);
+        const maxPrice = parseFloat(req.query.maxPrice);
 
-        // MongoDB query to filter products
-        const products = await Product.find({
-            name: { $regex: searchQuery, $options: "i" }, // Case-insensitive search
-        });
+        const filter = {
+            name: { $regex: searchQuery, $options: "i" },
+        };
 
+        if (!isNaN(minPrice)) {
+            filter.price = { ...filter.price, $gte: minPrice };
+        }
+
+        if (!isNaN(maxPrice)) {
+            filter.price = { ...filter.price, $lte: maxPrice };
+        }
+
+        const products = await Product.find(filter);
         res.json(products);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Failed to fetch products." });
     }
 });
+
 
 app.get("/products/:id", async (req, res) => {
     try {

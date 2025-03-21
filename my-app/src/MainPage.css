@@ -168,6 +168,20 @@ button:disabled {
     opacity: 0.6;
 }
 
+.filter-bar {
+    margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.filter-bar input {
+    padding: 8px;
+    width: 120px;
+    font-size: 0.9rem;
+}
+
+
 /* Responsive */
 @media (max-width: 800px) {
     .product {

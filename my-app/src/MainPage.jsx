@@ -9,12 +9,21 @@ const MainPage = () => {
     const [products, setProducts] = useState([]);
     const [user, setUser] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
+
 
     // Fetch products from the server (including search functionality)
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/products?search=${searchQuery}`);
+                const response = await axios.get("http://localhost:5000/products", {
+                    params: {
+                        search: searchQuery,
+                        minPrice,
+                        maxPrice,
+                    },
+                });
                 setProducts(response.data);
             } catch (error) {
                 console.error("Failed to fetch products:", error);
@@ -25,7 +34,7 @@ const MainPage = () => {
         setUser(activeUser);
 
         fetchProducts();
-    }, [searchQuery]); // Re-fetch products whenever the search query changes
+    }, [searchQuery, minPrice, maxPrice]); // Re-fetch products whenever the search query changes
 
     // Handle logout
     const handleLogout = () => {
@@ -144,6 +153,22 @@ const MainPage = () => {
                     </div>
                 )}
             </div>
+
+            <div className="filter-bar">
+                <input
+                    type="number"
+                    placeholder="Min Price"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                />
+                <input
+                    type="number"
+                    placeholder="Max Price"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                />
+            </div>
+
 
             <div className="container">
                 {products.length > 0 ? (
