@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./MainPage.css";
 import User from "./models/User";
+import { FaShoppingCart, FaBars } from "react-icons/fa";
 
 const MainPage = () => {
     const navigate = useNavigate();
@@ -77,17 +78,20 @@ const MainPage = () => {
 
     // Handle deleting a product
     const handleDeleteProduct = async (productId) => {
-        if (user?.role !== "owner") {
-            alert("You are not authorized to delete products.");
-            return;
+        if (confirm("Do you want to delete product")) {
+            if (user?.role !== "owner") {
+                alert("You are not authorized to delete products.");
+                return;
+            }
+
+            try {
+                await axios.delete(`http://localhost:5000/delete-product/${productId}`);
+                setProducts(products.filter((product) => product.productId !== productId));
+            } catch (error) {
+                console.error("Failed to delete product:", error);
+            }
         }
 
-        try {
-            await axios.delete(`http://localhost:5000/delete-product/${productId}`);
-            setProducts(products.filter((product) => product.productId !== productId));
-        } catch (error) {
-            console.error("Failed to delete product:", error);
-        }
     };
 
     // Handle Add to Cart (API Call)
@@ -148,7 +152,7 @@ const MainPage = () => {
     return (
         <div className="mainpage">
             <header className="header">
-                <h1>Welcome to Our Store</h1>
+                <h1>Welcome to Sahara </h1>
                 <div className="search-bar">
                     <input
                         type="text"
@@ -158,15 +162,8 @@ const MainPage = () => {
                     />
                 </div>
                 <div className="cart-icon-wrapper" onClick={() => navigate("/cart")}>
-                    <img
-                        src={
-                            cartHasItems
-                                ? "https://i.imgur.com/CEIbiHH.png"
-                                : "https://i.imgur.com/g2dkkSW.png"
-                        }
-                        alt="Cart"
-                        className="cart-icon"
-                    />
+                    <FaShoppingCart alt="Cart"
+                        className="cart-icon" />
                     {cartHasItems && <span className="cart-notification-dot"></span>}
 
                 </div>
@@ -174,7 +171,7 @@ const MainPage = () => {
             </header>
 
             <div className="hamburger-menu">
-                <button id="menuToggle" onClick={() => setMenuOpen(!menuOpen)}>&#9776;</button>
+                <button id="menuToggle" onClick={() => setMenuOpen(!menuOpen)}><FaBars /></button>
                 {menuOpen && (
                     <div className="menu-content">
                         <button onClick={() => navigate("/cart")}>Cart</button>

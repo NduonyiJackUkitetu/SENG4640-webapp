@@ -231,7 +231,7 @@ const Checkout = () => {
                             alt="Buy with PayPal"
                             style={{
                                 cursor: "pointer",
-                                height: "auto",
+                                //height: "auto",
                                 display: "block",
                                 justifySelf: "center",
                                 width: "200px",
