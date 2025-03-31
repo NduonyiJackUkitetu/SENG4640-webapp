@@ -46,9 +46,10 @@ const MainPage = () => {
         setUser(activeUser);
         fetchProducts();
 
+        if (activeUser) {
+            fetchCart(activeUser.userId);
+        }
 
-        fetchCart(activeUser.userId);
-        
     }, [searchQuery, minPrice, maxPrice]); // fixed dependencies
 
 

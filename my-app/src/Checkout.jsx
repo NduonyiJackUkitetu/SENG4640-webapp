@@ -95,9 +95,35 @@ const Checkout = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validateForm = () => {
+        const { cardNumber, expiryDate, cvv } = formData;
+
+        // Card Number: Must be 16 digits
+        if (!/^\d{16}$/.test(cardNumber)) {
+            alert("Card number must be exactly 16 digits.");
+            return false;
+        }
+
+        // CVV: 3 or 4 digits
+        if (!/^\d{3,4}$/.test(cvv)) {
+            alert("CVV must be 3 or 4 digits.");
+            return false;
+        }
+
+        // Expiry Date: MM/YY format
+        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+            alert("Expiry date must be in MM/YY format.");
+            return false;
+        }
+
+        return true;
+    };
+
+
     // Handle checkout submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return; // stop submission if validation fails
 
         try {
             // Send checkout request to the backend

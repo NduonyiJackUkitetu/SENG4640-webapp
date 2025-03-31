@@ -11,6 +11,13 @@ const ManagementPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const activeUser = JSON.parse(sessionStorage.getItem("activeUser"));
+
+        if (!activeUser) {
+            alert("You must be logged in as an admin to view admin.");
+            navigate("/");
+            return;
+        }
         const fetchData = async () => {
             try {
                 const usersResponse = await axios.get("http://localhost:5000/users");
