@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./MainPage.css";
+import User from "./models/User";
 
 const MainPage = () => {
     const navigate = useNavigate();
@@ -11,6 +12,8 @@ const MainPage = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
+    const [cartHasItems, setCartHasItems] = useState(false);
+
 
 
     // Fetch products from the server (including search functionality)
@@ -30,11 +33,24 @@ const MainPage = () => {
             }
         };
 
+        const fetchCart = async (userId) => {
+            try {
+                const res = await axios.get(`http://localhost:5000/cart/${userId}`);
+                setCartHasItems(res.data?.products?.length > 0);
+            } catch (err) {
+                console.error("Failed to fetch cart:", err);
+            }
+        };
+
         const activeUser = JSON.parse(sessionStorage.getItem("activeUser"));
         setUser(activeUser);
-
         fetchProducts();
-    }, [searchQuery, minPrice, maxPrice]); // Re-fetch products whenever the search query changes
+
+
+        fetchCart(activeUser.userId);
+        
+    }, [searchQuery, minPrice, maxPrice]); // fixed dependencies
+
 
     // Handle logout
     const handleLogout = () => {
@@ -93,6 +109,7 @@ const MainPage = () => {
             });
 
             alert(`${product.name} added to cart!`);
+            setCartHasItems(true);
         } catch (error) {
             console.error("Failed to add to cart:", error);
             alert("Could not add product to cart. Try again later.");
@@ -139,6 +156,20 @@ const MainPage = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
+                <div className="cart-icon-wrapper" onClick={() => navigate("/cart")}>
+                    <img
+                        src={
+                            cartHasItems
+                                ? "https://i.imgur.com/CEIbiHH.png"
+                                : "https://i.imgur.com/g2dkkSW.png"
+                        }
+                        alt="Cart"
+                        className="cart-icon"
+                    />
+                    {cartHasItems && <span className="cart-notification-dot"></span>}
+
+                </div>
+
             </header>
 
             <div className="hamburger-menu">
@@ -154,6 +185,8 @@ const MainPage = () => {
                     </div>
                 )}
             </div>
+
+
 
             <div className="filter-bar">
                 <input
