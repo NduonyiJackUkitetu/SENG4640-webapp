@@ -35,6 +35,20 @@ const ManagementPage = () => {
         fetchData();
     }, []);
 
+    const handleDeleteUser = async (userId) => {
+        if (window.confirm("Are you sure you want to delete this user?")) {
+            try {
+                await axios.delete(`http://localhost:5000/users/${userId}`);
+                setUsers(users.filter(user => user.userId !== userId));
+                alert("User deleted successfully.");
+            } catch (err) {
+                console.error("Failed to delete user:", err);
+                alert("Error deleting user. Try again.");
+            }
+        }
+    };
+
+
     return (
         <div className="admin-container">
             <button className="back-button" onClick={() => navigate("/mainpage")}>
@@ -73,6 +87,15 @@ const ManagementPage = () => {
                                         <td>{user.state}</td>
                                         <td>{user.zip}</td>
                                         <td className={user.role === "admin" ? "admin-badge" : ""}>{user.role}</td>
+                                        <td>
+                                            <button
+                                                className="delete-btn"
+                                                onClick={() => handleDeleteUser(user.userId)}
+                                                disabled={user.role === "admin"} // Prevent deleting admin
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
