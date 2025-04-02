@@ -36,6 +36,13 @@ const ManagementPage = () => {
     }, []);
 
     const handleDeleteUser = async (userId) => {
+        const activeUser = JSON.parse(sessionStorage.getItem("activeUser"));
+
+        if (activeUser?.userId !== "001") {
+            alert("Only admin user ID 001 is allowed to delete users.");
+            return;
+        }
+
         if (window.confirm("Are you sure you want to delete this user?")) {
             try {
                 await axios.delete(`http://localhost:5000/users/${userId}`);
@@ -47,6 +54,7 @@ const ManagementPage = () => {
             }
         }
     };
+
 
 
     return (
