@@ -6,8 +6,10 @@ import bcrypt from "bcryptjs";
 import User from "./models/User.js"; // Ensure correct path
 import Product from "./models/Product.js";
 import Cart from "./models/Cart.js"; // Import Cart Model
+import Order from "./models/Order.js";
+import axios from "axios"; // Import axios for API calls
 
-import { ObjectId } from "mongodb";
+const ObjectId = mongoose.Types.ObjectId;
 
 dotenv.config();
 
@@ -84,10 +86,11 @@ app.post("/login", async (req, res) => {
 // Route to Create Product (Only for Owner)
 app.post("/create-product", async (req, res) => {
     try {
-        const { name, description, price, image } = req.body;
+        const { name, description, price, image, stock } = req.body;
 
-        if (!name || !description || !price || !image) {
-            return res.status(400).json({ message: "All fields are required." });
+        // Check for missing fields
+        if (!name || !description || !price || !image || stock === undefined) {
+            return res.status(400).json({ message: "All fields are required, including stock." });
         }
 
         // Check if product already exists
@@ -96,7 +99,14 @@ app.post("/create-product", async (req, res) => {
             return res.status(400).json({ message: "Product with this name already exists." });
         }
 
-        const newProduct = new Product({ name, description, price, image });
+        // Create the new product with stock
+        const newProduct = new Product({
+            name,
+            description,
+            price,
+            image,
+            stock,
+        });
 
         await newProduct.save();
         res.status(201).json({ message: "Product created successfully!" });
@@ -107,22 +117,34 @@ app.post("/create-product", async (req, res) => {
     }
 });
 
+
 // Route to Get All Products
 app.get("/products", async (req, res) => {
     try {
-        const searchQuery = req.query.search || ""; // Get search query from request
+        const searchQuery = req.query.search || "";
+        const minPrice = parseFloat(req.query.minPrice);
+        const maxPrice = parseFloat(req.query.maxPrice);
 
-        // MongoDB query to filter products
-        const products = await Product.find({
-            name: { $regex: searchQuery, $options: "i" }, // Case-insensitive search
-        });
+        const filter = {
+            name: { $regex: searchQuery, $options: "i" },
+        };
 
+        if (!isNaN(minPrice)) {
+            filter.price = { ...filter.price, $gte: minPrice };
+        }
+
+        if (!isNaN(maxPrice)) {
+            filter.price = { ...filter.price, $lte: maxPrice };
+        }
+
+        const products = await Product.find(filter);
         res.json(products);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Failed to fetch products." });
     }
 });
+
 
 app.get("/products/:id", async (req, res) => {
     try {
@@ -144,11 +166,11 @@ app.get("/products/:id", async (req, res) => {
 app.put("/modify-product/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, price, image } = req.body;
+        const { name, description, price, image, stock } = req.body;
 
         const updatedProduct = await Product.findOneAndUpdate(
             { productId: id }, // Find product by `productId`
-            { name, description, price, image },
+            { name, description, price, image, stock },
             { new: true }
         );
 
@@ -341,6 +363,187 @@ app.post("/products/details", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+
+// Checkout route
+app.post("/checkout", async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        // Fetch the cart
+        const cart = await Cart.findOne({ userId });
+        if (!cart || cart.products.length === 0) {
+            return res.status(400).json({ message: "Cart is empty" });
+        }
+
+        // Fetch product details using productId
+        const productIds = cart.products.map(item => item.productId);
+        const productDetails = await Product.find({ productId: { $in: productIds } });
+
+        // Map products for quick lookup
+        const productMap = {};
+        productDetails.forEach(product => {
+            productMap[product.productId] = product;
+        });
+
+        const orderProducts = [];
+
+        // Iterate through each cart item
+        for (const item of cart.products) {
+            const product = productMap[item.productId];
+
+            if (!product) {
+                console.error("Missing product details:", item);
+                throw new Error(`Product details missing for productId: ${item.productId}`);
+            }
+
+            // Check stock
+            if (product.stock < item.quantity) {
+                return res.status(400).json({
+                    message: `Not enough stock for "${product.name}". Available: ${product.stock}, Requested: ${item.quantity}`,
+                });
+            }
+
+            // Reduce stock
+            product.stock -= item.quantity;
+            await product.save();
+
+            // Add to order array
+            orderProducts.push({
+                productId: product.productId,
+                image: product.image,
+                quantity: item.quantity,
+                cost: parseFloat(product.price) * item.quantity,
+            });
+        }
+
+        // Calculate total amount
+        const totalAmount = orderProducts.reduce((sum, item) => sum + item.cost, 0);
+        if (isNaN(totalAmount)) {
+            throw new Error("Total amount calculation failed.");
+        }
+
+        // Get current time (from API or fallback)
+        let orderDate;
+        try {
+            const timeResponse = await axios.get("https://worldtimeapi.org/api/timezone/Etc/UTC");
+            orderDate = timeResponse.data.datetime;
+        } catch (error) {
+            console.warn("Time API failed, using local system time.");
+            orderDate = new Date().toISOString();
+        }
+
+        // Save the order
+        const newOrder = new Order({
+            userId,
+            products: orderProducts,
+            totalAmount,
+            orderDate,
+        });
+
+        await newOrder.save();
+
+        // Clear cart
+        await Cart.findOneAndDelete({ userId });
+
+        res.status(201).json({ message: "Order placed successfully!", order: newOrder });
+
+    } catch (error) {
+        console.error("Error processing checkout:", error);
+        res.status(500).json({ message: "Server error during checkout.", error: error.message });
+    }
+});
+
+
+app.get("/users", async (req, res) => {
+    try {
+        const users = await User.find({}, "-password"); // Exclude password field for security
+        res.json(users);
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Server error fetching users." });
+    }
+});
+
+app.get("/orders", async (req, res) => {
+    try {
+        const orders = await Order.find().lean(); // Get all orders
+
+        // Fetch product details for each order
+        for (let order of orders) {
+            for (let product of order.products) {
+                const productDetails = await Product.findOne({ productId: product.productId }).lean();
+                if (productDetails) {
+                    product.name = productDetails.name; // Add product name
+                    product.image = productDetails.image; // Ensure correct image
+                }
+            }
+        }
+
+        res.json(orders);
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        res.status(500).json({ message: "Failed to fetch orders" });
+    }
+});
+
+app.get("/orders/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Find all orders for the user
+        const orders = await Order.find({ userId });
+
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({ message: "No orders found for this user." });
+        }
+
+        // Fetch product details for each order
+        const populatedOrders = await Promise.all(
+            orders.map(async (order) => {
+                const enrichedProducts = await Promise.all(
+                    order.products.map(async (item) => {
+                        const product = await Product.findOne({ productId: item.productId });
+                        return {
+                            productId: item.productId,
+                            name: product ? product.name : "Unknown Product",
+                            image: product ? product.image : "",
+                            quantity: item.quantity,
+                            cost: item.cost,
+                        };
+                    })
+                );
+                return { ...order._doc, products: enrichedProducts };
+            })
+        );
+
+        res.status(200).json(populatedOrders);
+    } catch (error) {
+        console.error("Error fetching user orders:", error);
+        res.status(500).json({ message: "Failed to fetch orders." });
+    }
+});
+
+app.delete("/users/:userId", async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const deleted = await User.findOneAndDelete({ userId });
+
+        if (!deleted) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Optionally: delete their cart and orders too
+        await Cart.deleteOne({ userId });
+        await Order.deleteMany({ userId });
+
+        res.status(200).json({ message: "User and related data deleted." });
+    } catch (err) {
+        console.error("Error deleting user:", err);
+        res.status(500).json({ message: "Server error during deletion." });
+    }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

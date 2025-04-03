@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios"; // Import axios for API calls
 import "./Login.css";
 
@@ -70,6 +70,13 @@ const Login = () => {
                         Create Account
                     </button>
                 </form>
+
+                {/* Continue Without Sign-In as a Link */}
+                <p className="guest-link">
+                    <Link to="/mainpage" onClick={() => sessionStorage.removeItem("activeUser")}>
+                        Continue Without Sign-In
+                    </Link>
+                </p>
             </div>
         </div>
     );

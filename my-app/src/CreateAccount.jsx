@@ -120,7 +120,7 @@ const CreateAccount = () => {
                     </fieldset>
 
                     <button type="submit" disabled={loading}>{loading ? "Creating..." : "Create Account"}</button>
-                    <button type="button" onClick={() => navigate("/login")}>Back To Login</button>
+                    <button type="button" onClick={() => navigate("/")}>Back To Login</button>
                 </form>
             </div>
         </div>

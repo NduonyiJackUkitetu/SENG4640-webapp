@@ -95,17 +95,49 @@ const Checkout = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // Handle form submission
+    const validateForm = () => {
+        const { cardNumber, expiryDate, cvv } = formData;
+
+        // Card Number: Must be 16 digits
+        if (!/^\d{16}$/.test(cardNumber)) {
+            alert("Card number must be exactly 16 digits.");
+            return false;
+        }
+
+        // CVV: 3 or 4 digits
+        if (!/^\d{3,4}$/.test(cvv)) {
+            alert("CVV must be 3 or 4 digits.");
+            return false;
+        }
+
+        // Expiry Date: MM/YY format
+        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+            alert("Expiry date must be in MM/YY format.");
+            return false;
+        }
+
+        return true;
+    };
+
+
+    // Handle checkout submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return; // stop submission if validation fails
 
         try {
-            await axios.post("http://localhost:5000/checkout", { userId: user.userId });
-            alert("Order placed successfully!");
+            // Send checkout request to the backend
+            const response = await axios.post("http://localhost:5000/checkout", { userId: user.userId });
+
+            alert(`Order placed successfully! Your order time: ${response.data.order.orderDate}`);
             navigate("/mainpage");
         } catch (error) {
             console.error("Error during checkout:", error);
-            alert("Failed to place order. Please try again.");
+            if (error.response?.data?.message) {
+                alert(`Checkout failed: ${error.response.data.message}`);
+            } else {
+                alert("Failed to place order. Please try again.");
+            }
         }
     };
 
@@ -193,6 +225,22 @@ const Checkout = () => {
 
                     <button type="submit" className="checkout-button">Place Order</button>
                     <button type="button" className="return-to-shopping" onClick={() => navigate("/mainpage")}>Return To Shopping</button>
+                    <button style={{ border: "none", background: "transparent", padding: 0 }}>
+                        <img
+                            src="https://i.imgur.com/ZCIqckE.png"
+                            alt="Buy with PayPal"
+                            style={{
+                                cursor: "pointer",
+                                //height: "auto",
+                                display: "block",
+                                justifySelf: "center",
+                                width: "200px",
+                                height: "50px",
+                                borderRadius: "6px"
+                            }}
+                        />
+                    </button>
+
                 </form>
             </div>
         </div>
